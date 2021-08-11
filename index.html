@@ -154,6 +154,118 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xusworld.github.io/2021/08/11/basic-linux-command-disk/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xusworld">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tatooine">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/08/11/basic-linux-command-disk/" class="post-title-link" itemprop="url">Linux命令必知必会 - 磁盘管理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-11 12:53:04 / 修改时间：12:53:44" itemprop="dateCreated datePublished" datetime="2021-08-11T12:53:04+08:00">2021-08-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="磁盘管理"><a href="#磁盘管理" class="headerlink" title="磁盘管理"></a>磁盘管理</h2><p>必须用起来才有价值</p>
+<p><a href="https://link.zhihu.com/?target=https://cloud.tencent.com/developer/article/1149190">Linux磁盘监控工具说明 - 云+社区 - 腾讯云</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span>、iotop、iostat、<span class="built_in">dirs</span>、df、du、mkdir、quota、rmdir、<span class="built_in">stat</span>、tree、mount、unmount、</span><br><span class="line">badblocks、dd、fsck、sync、</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="cd"><a href="#cd" class="headerlink" title="cd"></a>cd</h3><p>切换用户当前工作目录</p>
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- 进入用户主目录</span><br><span class="line"><span class="variable">$cd</span></span><br><span class="line"></span><br><span class="line">- 进入用户主目录</span><br><span class="line"><span class="variable">$cd</span> ~</span><br><span class="line"></span><br><span class="line">- 进入根目录</span><br><span class="line"><span class="variable">$cd</span> / </span><br><span class="line"></span><br><span class="line">- 返回上级目录</span><br><span class="line"><span class="variable">$cd</span> ..  </span><br><span class="line"></span><br><span class="line">- 返回上两级目录</span><br><span class="line"><span class="variable">$cd</span> ../..</span><br></pre></td></tr></table></figure>
+
+<h3 id="df"><a href="#df" class="headerlink" title="df"></a>df</h3><p>显示磁盘相关的数据</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">-a或--all：包含全部的文件系统；</span><br><span class="line">--block-size=&lt;区块大小&gt;：以指定的区块大小来显示区块数目；</span><br><span class="line">-h或--human-readable：以可读性较高的方式来显示信息；</span><br><span class="line">-H或--si：与-h参数相同，但在计算时是以1000 Bytes为换算单位而非1024 Bytes；</span><br><span class="line">-i或--inodes：显示inode的信息；</span><br><span class="line">-k或--kilobytes：指定区块大小为1024字节；</span><br><span class="line">-l或--local：仅显示本地端的文件系统；</span><br><span class="line">-m或--megabytes：指定区块大小为1048576字节；</span><br><span class="line">--no-sync：在取得磁盘使用信息前，不要执行sync指令，此为预设值；</span><br><span class="line">-P或--portability：使用POSIX的输出格式；</span><br><span class="line">--sync：在取得磁盘使用信息前，先执行sync指令；</span><br><span class="line">-t&lt;文件系统类型&gt;或--type=&lt;文件系统类型&gt;：仅显示指定文件系统类型的磁盘信息；</span><br><span class="line">-T或--print-type：显示文件系统的类型；</span><br><span class="line">-x&lt;文件系统类型&gt;或--exclude-type=&lt;文件系统类型&gt;：不要显示指定文件系统类型的磁盘信息；</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line">- 查看系统磁盘设备，默认以 KB 为单位</span><br><span class="line">$ df</span><br><span class="line">Filesystem     1K-blocks     Used Available Use% Mounted on</span><br><span class="line">/dev/vda1      103079868 12081020  86578848  13% /</span><br><span class="line">devtmpfs        32844900        0  32844900   0% /dev</span><br><span class="line">tmpfs           32855168        0  32855168   0% /dev/shm</span><br><span class="line">tmpfs           32855168   271888  32583280   1% /run</span><br><span class="line">tmpfs           32855168        0  32855168   0% /sys/fs/cgroup</span><br><span class="line">/dev/vdb1      515927296    73752 489622812   1% /data</span><br><span class="line">tmpfs            6571036        0   6571036   0% /run/user/0</span><br><span class="line"></span><br><span class="line">- 查看系统磁盘设备(可读性)</span><br><span class="line">$ df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/vda1        99G   12G   83G  13% /</span><br><span class="line">devtmpfs         32G     0   32G   0% /dev</span><br><span class="line">tmpfs            32G     0   32G   0% /dev/shm</span><br><span class="line">tmpfs            32G  266M   32G   1% /run</span><br><span class="line">tmpfs            32G     0   32G   0% /sys/fs/cgroup</span><br><span class="line">/dev/vdb1       493G   73M  467G   1% /data</span><br><span class="line">tmpfs           6.3G     0  6.3G   0% /run/user/0</span><br><span class="line"></span><br><span class="line">- 查看全部文件系统</span><br><span class="line">$ df -a -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">rootfs             -     -     -    - /</span><br><span class="line">sysfs              0     0     0    - /sys</span><br><span class="line">proc               0     0     0    - /proc</span><br><span class="line">devtmpfs         32G     0   32G   0% /dev</span><br><span class="line">securityfs         0     0     0    - /sys/kernel/security</span><br><span class="line">tmpfs            32G     0   32G   0% /dev/shm</span><br><span class="line">devpts             0     0     0    - /dev/pts</span><br><span class="line">tmpfs            32G  266M   32G   1% /run</span><br><span class="line">tmpfs            32G     0   32G   0% /sys/fs/cgroup</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/systemd</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/oom</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/memory</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/pids</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/net_cls</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/devices</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/perf_event</span><br><span class="line">configfs           0     0     0    - /sys/kernel/config</span><br><span class="line">/dev/vda1        99G   12G   83G  13% /</span><br><span class="line">debugfs            0     0     0    - /sys/kernel/debug</span><br><span class="line">hugetlbfs          0     0     0    - /dev/hugepages</span><br><span class="line">systemd-1          -     -     -    - /proc/sys/fs/binfmt_misc</span><br><span class="line">sunrpc             0     0     0    - /var/lib/nfs/rpc_pipefs</span><br><span class="line">mqueue             0     0     0    - /dev/mqueue</span><br><span class="line">nfsd               0     0     0    - /proc/fs/nfsd</span><br><span class="line">binfmt_misc        0     0     0    - /proc/sys/fs/binfmt_misc</span><br><span class="line">/dev/vdb1       493G   73M  467G   1% /data</span><br><span class="line">tmpfs           6.3G     0  6.3G   0% /run/user/0</span><br><span class="line"></span><br><span class="line">- 以inode 模式显示磁盘的使用情况</span><br><span class="line">$ df -i -h</span><br><span class="line">Filesystem     Inodes IUsed IFree IUse% Mounted on</span><br><span class="line">/dev/vda1        6.3M  457K  5.9M    8% /</span><br><span class="line">devtmpfs         7.9M  1.5K  7.9M    1% /dev</span><br><span class="line">tmpfs            7.9M     1  7.9M    1% /dev/shm</span><br><span class="line">tmpfs            7.9M  1.3K  7.9M    1% /run</span><br><span class="line">tmpfs            7.9M    15  7.9M    1% /sys/fs/cgroup</span><br><span class="line">/dev/vdb1         32M    11   32M    1% /data</span><br><span class="line">tmpfs            7.9M     1  7.9M    1% /run/user/0</span><br><span class="line"></span><br><span class="line">- 列出各文件系统的i节点使用情况</span><br><span class="line">$ df -iah </span><br><span class="line">Filesystem     Inodes IUsed IFree IUse% Mounted on</span><br><span class="line">rootfs              -     -     -     - /</span><br><span class="line">sysfs               0     0     0     - /sys</span><br><span class="line">proc                0     0     0     - /proc</span><br><span class="line">devtmpfs         7.9M  1.5K  7.9M    1% /dev</span><br><span class="line">securityfs          0     0     0     - /sys/kernel/security</span><br><span class="line">tmpfs            7.9M     1  7.9M    1% /dev/shm</span><br><span class="line">devpts              0     0     0     - /dev/pts</span><br><span class="line">tmpfs            7.9M  1.3K  7.9M    1% /run</span><br><span class="line">tmpfs            7.9M    15  7.9M    1% /sys/fs/cgroup</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/systemd</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/oom</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/memory</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/pids</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/net_cls</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/devices</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/perf_event</span><br><span class="line">configfs            0     0     0     - /sys/kernel/config</span><br><span class="line">/dev/vda1        6.3M  457K  5.9M    8% /</span><br><span class="line">debugfs             0     0     0     - /sys/kernel/debug</span><br><span class="line">hugetlbfs           0     0     0     - /dev/hugepages</span><br><span class="line">systemd-1           -     -     -     - /proc/sys/fs/binfmt_misc</span><br><span class="line">sunrpc              0     0     0     - /var/lib/nfs/rpc_pipefs</span><br><span class="line">mqueue              0     0     0     - /dev/mqueue</span><br><span class="line">nfsd                0     0     0     - /proc/fs/nfsd</span><br><span class="line">binfmt_misc         0     0     0     - /proc/sys/fs/binfmt_misc</span><br><span class="line">/dev/vdb1         32M    11   32M    1% /data</span><br><span class="line">tmpfs            7.9M     1  7.9M    1% /run/user/0</span><br><span class="line"></span><br><span class="line">- 列出文件系统的类型</span><br><span class="line">$ df -Th</span><br><span class="line">Filesystem     Type      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/vda1      ext4       99G   12G   83G  13% /</span><br><span class="line">devtmpfs       devtmpfs   32G     0   32G   0% /dev</span><br><span class="line">tmpfs          tmpfs      32G     0   32G   0% /dev/shm</span><br><span class="line">tmpfs          tmpfs      32G  266M   32G   1% /run</span><br><span class="line">tmpfs          tmpfs      32G     0   32G   0% /sys/fs/cgroup</span><br><span class="line">/dev/vdb1      ext4      493G   73M  467G   1% /data</span><br><span class="line">tmpfs          tmpfs     6.3G     0  6.3G   0% /run/user/0</span><br></pre></td></tr></table></figure>
+
+<h3 id="du"><a href="#du" class="headerlink" title="du"></a>du</h3><p>显示每个文件和目录的磁盘使用空间</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">-c, --total                            除了显示个别目录或文件的大小外，同时也显示所有目录或文件的总和。</span><br><span class="line">-D, --dereference-args                 显示指定符号链接的源文件大小。</span><br><span class="line">-H, --si                               与-h参数相同，但是K，M，G是以1000为换算单位。</span><br><span class="line">-h, --human-readable                   以K，M，G为单位，提高信息的可读性。</span><br><span class="line">-k, --kilobytes                        以KB(1024bytes)为单位输出。</span><br><span class="line">-l, --count-links                      重复计算硬件链接的文件。</span><br><span class="line">-m, --megabytes                        以MB为单位输出。</span><br><span class="line">-L&lt;符号链接&gt;, --dereference&lt;符号链接&gt;  显示选项中所指定符号链接的源文件大小。</span><br><span class="line">-P, --no-dereference                   不跟随任何符号链接(默认)</span><br><span class="line">-0, --null                             将每个空行视作0 字节而非换行符</span><br><span class="line">-S, --separate-dirs                    显示个别目录的大小时，并不含其子目录的大小。</span><br><span class="line">-s, --summarize                        仅显示总计，只列出最后加总的值。</span><br><span class="line">-x, --one-file-xystem                  以一开始处理时的文件系统为准，若遇上其它不同的文件系统目录则略过。</span><br><span class="line">-X&lt;文件&gt;, --exclude-from=&lt;文件&gt;        在&lt;文件&gt;指定目录或文件。</span><br><span class="line">--apparent-size                        显示表面用量，而并非是磁盘用量；虽然表面用量通常会小一些，但有时它会因为稀疏文件间的&quot;洞&quot;、内部碎片、非直接引用的块等原因而变大。</span><br><span class="line">--files0-from=F                        计算文件F中以NUL结尾的文件名对应占用的磁盘空间如果F的值是&quot;-&quot;，则从标准输入读入文件名</span><br><span class="line">--exclude=&lt;目录或文件&gt;                 略过指定的目录或文件。</span><br><span class="line">--max-depth=N                          显示目录总计(与--all 一起使用计算文件)当N为指定数值时计算深度为N，等于0时等同--summarize</span><br><span class="line">--si                                   类似-h，但在计算时使用1000 为基底而非1024</span><br><span class="line">--time                                 显示目录或该目录子目录下所有文件的最后修改时间</span><br><span class="line">--time=WORD                            显示WORD时间，而非修改时间：atime，access，use，ctime 或status</span><br><span class="line">--time-style=样式                      按照指定样式显示时间(样式解释规则同&quot;date&quot;命令)：full-iso，long-iso，iso，+FORMAT</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">- 文件从大到小排序</span><br><span class="line">$ du -sh * |sort -rh</span><br><span class="line">2.9M    <span class="built_in">command</span></span><br><span class="line">1.9M    assets</span><br><span class="line">148K    template</span><br><span class="line">72K     package-lock.json</span><br><span class="line">52K     dist</span><br><span class="line">28K     build</span><br><span class="line">16K     README.md</span><br><span class="line">4.0K    renovate.json</span><br><span class="line">4.0K    package.json</span><br><span class="line">4.0K    LICENSE</span><br><span class="line"></span><br><span class="line">- 只显示当前目录下子目录的大小</span><br><span class="line">$ du -sh ./*/</span><br><span class="line">1.9M    ./assets/</span><br><span class="line">28K     ./build/</span><br><span class="line">2.9M    ./<span class="built_in">command</span>/</span><br><span class="line">52K     ./dist/</span><br><span class="line">148K    ./template/</span><br><span class="line"></span><br><span class="line">- 查看指定目录下文件所占的空间</span><br><span class="line">$ du ./*</span><br><span class="line">144     ./alfred.png</span><br><span class="line">452     ./chrome-extensions.gif</span><br><span class="line">4       ./dash-icon.png</span><br><span class="line">1312    ./Linux.gif</span><br><span class="line">16      ./qr.png</span><br><span class="line"></span><br><span class="line">- 只显示总和的大小</span><br><span class="line">$ du -s -h .</span><br><span class="line">236M    .</span><br></pre></td></tr></table></figure>
+
+<h3 id="mkdir"><a href="#mkdir" class="headerlink" title="mkdir"></a>mkdir</h3><p>创建目录</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-m&lt;目标属性&gt;或--mode&lt;目标属性&gt;建立目录的同时设置目录的权限；</span><br><span class="line">-p或--parents 若所要建立目录的上层目录目前尚未建立，则会一并建立上层目录；</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在目录/usr/local下建立子目录test，并且只有文件主有读、写和执行权限，其他人无权访问</span></span><br><span class="line">$ mkdir -m 700 /usr/<span class="built_in">local</span>/<span class="built_in">test</span></span><br><span class="line"></span><br><span class="line">$ mkdir -p  bin/os</span><br></pre></td></tr></table></figure>
+
+<h3 id="rmdir"><a href="#rmdir" class="headerlink" title="rmdir"></a>rmdir</h3><p>删除空目录</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-p或--parents：删除指定目录后，若该目录的上层目录已变成空目录，则将其一并删除；</span><br><span class="line">--ignore-fail-on-non-empty：此选项使rmdir命令忽略由于删除非空目录时导致的错误信息；</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ rm dir</span><br><span class="line">$ rm -p path/to/dir</span><br></pre></td></tr></table></figure>
+
+<h3 id="quota"><a href="#quota" class="headerlink" title="quota"></a>quota</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/quota.html">quota 命令，Linux quota 命令详解：显示磁盘已使用的空间与限制</a></p>
+<h3 id="stat"><a href="#stat" class="headerlink" title="stat"></a>stat</h3><p>用于显示文件的状态信息</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-L：支持符号连接；</span><br><span class="line">-f：显示文件系统状态而非文件状态；</span><br><span class="line">-t：以简洁方式输出信息；</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ ls -l myfile</span><br><span class="line">-rw-r--r-- 1 root root 0 2010-10-09 myfile</span><br><span class="line"></span><br><span class="line">$ stat myfile</span><br><span class="line">file: “myfile”</span><br><span class="line">Size: 0               Blocks: 8          IO Block: 4096   一般空文件</span><br><span class="line">Device: fd00h/64768d    Inode: 194805815   Links: 1</span><br><span class="line">Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)</span><br><span class="line">Access: 2010-12-12 12:22:35.000000000 +0800</span><br><span class="line">Modify: 2010-10-09 20:44:21.000000000 +0800</span><br><span class="line">Change: 2010-10-09 20:44:21.000000000 +0800</span><br><span class="line"></span><br><span class="line">$ stat -t myfile</span><br><span class="line">myfile 0 8 81a4 0 0 fd00 194805815 1 0 0 1292127755 1286628261 1286628261 4096</span><br></pre></td></tr></table></figure>
+
+<h3 id="tree"><a href="#tree" class="headerlink" title="tree"></a>tree</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/tree.html">tree 命令，Linux tree 命令详解：树状图列出目录的内容</a></p>
+<p>树状图列出目录的内容</p>
+<p><strong>选项</strong></p>
+<h3 id="mount"><a href="#mount" class="headerlink" title="mount"></a>mount</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/mount.html">mount 命令，Linux mount 命令详解：用于挂载Linux系统外的文件</a></p>
+<h3 id="unmount"><a href="#unmount" class="headerlink" title="unmount"></a>unmount</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/umount.html">umount 命令，Linux umount 命令详解：用于卸载已经加载的文件系统</a></p>
+<h3 id="badblocks"><a href="#badblocks" class="headerlink" title="badblocks"></a>badblocks</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/badblocks.html">badblocks 命令，Linux badblocks 命令详解：查找磁盘中损坏的区块</a></p>
+<h3 id="dd"><a href="#dd" class="headerlink" title="dd"></a>dd</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/dd.html">dd 命令，Linux dd 命令详解：复制文件并对原文件的内容进行转换和格式化处理</a></p>
+<h3 id="fsck"><a href="#fsck" class="headerlink" title="fsck"></a>fsck</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/fsck.html">fsck 命令，Linux fsck 命令详解：检查并且试图修复文件系统中的错误</a></p>
+<h3 id="sync"><a href="#sync" class="headerlink" title="sync"></a>sync</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/sync.html">sync 命令，Linux sync 命令详解：用于强制被改变的内容立刻写入磁盘</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://xusworld.github.io/2021/08/11/basic-linux-command-network/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1077,102 +1189,11 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://xusworld.github.io/2021/08/08/vim_cheat_sheet/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="xusworld">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Tatooine">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/08/vim_cheat_sheet/" class="post-title-link" itemprop="url">一份朴实无华的Vim笔记</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2021-08-08 13:11:43" itemprop="dateCreated datePublished" datetime="2021-08-08T13:11:43+08:00">2021-08-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-11 11:00:01" itemprop="dateModified" datetime="2021-08-11T11:00:01+08:00">2021-08-11</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>[TOC]</p>
-<h2 id="光标命令"><a href="#光标命令" class="headerlink" title="光标命令"></a>光标命令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">`h` 左移一个字符</span><br><span class="line">`l` 右移一个字符</span><br><span class="line">`j` 下移一行</span><br><span class="line">`k` 上移一行</span><br><span class="line">`w` 前移一个单词，光标停在下一个单词开头</span><br><span class="line">`W` 移动下一个单词开头，但忽略一些标点</span><br><span class="line">`e` 前移一个单词，光标停在下一个单词末尾</span><br><span class="line">`E` 移动到下一个单词末尾，如果词尾有标点，则移动到标点</span><br><span class="line">`b` 后移一个单词，光标停在上一个单词开头</span><br><span class="line">`B` 移动到上一个单词开头，忽略一些标点</span><br><span class="line">`(` 前移1句</span><br><span class="line">`)` 后移1句</span><br><span class="line">`&#123;` 前移1段</span><br><span class="line">`&#125;` 后移1段</span><br></pre></td></tr></table></figure>
-
-<h2 id="滚屏命令"><a href="#滚屏命令" class="headerlink" title="滚屏命令"></a>滚屏命令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">`ctrl+f` 下翻一屏</span><br><span class="line">`ctrl+b` 上翻一屏</span><br><span class="line">`ctrl+d` 下翻半屏</span><br><span class="line">`ctrl+u` 上翻半屏</span><br><span class="line">`ctrl+e` 向下滚动一行</span><br><span class="line">`ctrl+y` 向上滚动一行</span><br><span class="line">`n%` 到文件n%的位置</span><br><span class="line">`zz` 将当前行移动到屏幕中央</span><br><span class="line">`zt` 将当前行移动到屏幕顶端</span><br><span class="line">`zb` 将当前行移动到屏幕底端</span><br></pre></td></tr></table></figure>
-
-<h2 id="插入命令"><a href="#插入命令" class="headerlink" title="插入命令"></a>插入命令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">第一部分 基本插入</span><br><span class="line">`I` 在当前行第一个非空字符前插入</span><br><span class="line">`gI` 在当前行第一列插入</span><br><span class="line">`a` 在光标后插入</span><br><span class="line">`A` 在当前行最后插入</span><br><span class="line">`o` 在下面新建一行插入</span><br><span class="line">`O` 在上面新建一行插入</span><br><span class="line"></span><br><span class="line">第二部分 改写插入</span><br><span class="line">`c[n]w` 改写光标后1(n)个词</span><br><span class="line">`c[n]l` 改写光标后n个字母,l (vim中光标右移一个字符命令)</span><br><span class="line">`c[n]h` 改写光标前n个字母, h (vim中光标左移一个字符命令)</span><br><span class="line">`[n]cc` 修改当前[n]行</span><br><span class="line">`[n]s` 以输入的文本替代光标之后1(n)个字符，相当于c[n]l</span><br><span class="line">`[n]S` 删除指定数目的行，并以所输入文本代替之</span><br></pre></td></tr></table></figure>
-
-<h2 id="复制命令"><a href="#复制命令" class="headerlink" title="复制命令"></a>复制命令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">`y` 复制在可视模式下选中的文本</span><br><span class="line">`yy` or Y 复制整行文本</span><br><span class="line">`y[n]w` 复制一(n)个词</span><br><span class="line">`y[n]l` 复制光标右边1(n)个字符</span><br><span class="line">`y[n]h` 复制光标左边1(n)个字符</span><br><span class="line">`y$` 从光标当前位置复制到行尾</span><br><span class="line">`y0` 从光标当前位置复制到行首</span><br></pre></td></tr></table></figure>
-
-<h2 id="剪切和粘贴命令"><a href="#剪切和粘贴命令" class="headerlink" title="剪切和粘贴命令"></a>剪切和粘贴命令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">`[n]x` 剪切光标右边n个字符，相当于d[n]l</span><br><span class="line">`[n]X` 剪切光标左边n个字符，相当于d[n]h</span><br><span class="line"></span><br><span class="line">`p` 在光标之后粘贴</span><br><span class="line">`P` 在光标之前粘贴</span><br></pre></td></tr></table></figure>
-
-<h2 id="删除命令"><a href="#删除命令" class="headerlink" title="删除命令"></a>删除命令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">`d` 删除（剪切）在可视模式下选中的文本</span><br><span class="line">`d$ or D` 删除（剪切）当前位置到行尾的内容</span><br><span class="line">`d[n]w` 删除（剪切）1(n)个单词</span><br><span class="line">`d[n]l` 删除（剪切）光标右边1(n)个字符</span><br><span class="line">`d[n]h` 删除（剪切）光标左边1(n)个字符</span><br><span class="line">`d0 删除（剪切）当前位置到行首的内容</span><br><span class="line">`[n] dd` 删除（剪切）1(n)行</span><br></pre></td></tr></table></figure>
-
-<h2 id="撤销命令"><a href="#撤销命令" class="headerlink" title="撤销命令"></a>撤销命令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">`u` 撤销最后执行的命令</span><br><span class="line">`U` 撤销对整行的修改</span><br></pre></td></tr></table></figure>
-
-<h2 id="查找命令"><a href="#查找命令" class="headerlink" title="查找命令"></a>查找命令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">`/word` 在后面的文本中查找word</span><br><span class="line">`?word` 在前面的文本中查找word</span><br><span class="line">`/pattern/`+number 将光标停在包含pattern的行后面第number行上</span><br><span class="line">`/pattern/`-number 将光标停在包含pattern的行前面第number行上</span><br><span class="line">`n` 向后查找下一个</span><br><span class="line">`N` 向前查找下一个</span><br></pre></td></tr></table></figure>
-
-<h2 id="替换命令"><a href="#替换命令" class="headerlink" title="替换命令"></a>替换命令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">`:s/old/new/g` 可以替换 old 为 new</span><br><span class="line"></span><br><span class="line">替换两行之间出现的每个匹配串，操作如下</span><br><span class="line">`:#,#s/old/new/g`   其中 #,# 代表的是替换操作的若干行中首尾两行的行号。</span><br><span class="line">`:%s/old/new/g`     则是替换整个文件中的每个匹配串。</span><br><span class="line">`:%s/old/new/gc`    会找到整个文件中的每个匹配串，并且对每个匹配串提示是否进行替换。</span><br></pre></td></tr></table></figure>
-
-<h2 id="排版命令"><a href="#排版命令" class="headerlink" title="排版命令"></a>排版命令</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">`&lt;&lt;` 向左缩进一个shiftwidth</span><br><span class="line">`&gt;&gt;` 向右缩进一个shiftwidth</span><br><span class="line">`:ce(nter)` 本行文字居中</span><br><span class="line">`:le(ft)` 本行文字靠左</span><br><span class="line">`:ri(ght)` 本行文字靠右</span><br></pre></td></tr></table></figure>
-<h2 id="分屏命令"><a href="#分屏命令" class="headerlink" title="分屏命令"></a>分屏命令</h2><h3 id="命令行中分屏打开多文件"><a href="#命令行中分屏打开多文件" class="headerlink" title="命令行中分屏打开多文件"></a>命令行中分屏打开多文件</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">`-o`  水平分屏</span><br><span class="line">vim -o[n] file1 [file2 ...]</span><br><span class="line">`-O` 垂直分屏</span><br><span class="line">vim -O[n] file1 [file2 ...]</span><br></pre></td></tr></table></figure>
-
-<h3 id="vim中命令模式分屏"><a href="#vim中命令模式分屏" class="headerlink" title="vim中命令模式分屏"></a>vim中命令模式分屏</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1. 垂直分屏</span><br><span class="line">`:vs` [file]</span><br><span class="line">`:vs` 将当前文件垂直分屏</span><br><span class="line">`:vs` file 创建新文件并垂直分屏</span><br><span class="line"></span><br><span class="line">2. 水平分屏</span><br><span class="line">`:sv` [file]</span><br><span class="line">`:sv` 将当前文件水平分屏</span><br><span class="line">`:sv` file 创建新文件并水平分屏</span><br></pre></td></tr></table></figure>
-<h3 id="分屏屏间光标移动"><a href="#分屏屏间光标移动" class="headerlink" title="分屏屏间光标移动"></a>分屏屏间光标移动</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">`ctrl-w ctrl-w` 分屏间循环移动光标</span><br><span class="line">`ctrl+w l` 光标移到右边的屏中</span><br><span class="line">`ctrl+w h` 光标移到左边的屏中</span><br><span class="line">`ctrl+w k` 光标移到上面的屏中</span><br><span class="line">`ctrl+w j` 光标移到下边的屏中</span><br><span class="line">`ctrl+w w` 光标移到下一个屏中</span><br><span class="line">`ctrl+w p` 光标移到上一个屏中</span><br></pre></td></tr></table></figure>
-
-<h3 id="分屏的移动"><a href="#分屏的移动" class="headerlink" title="分屏的移动"></a>分屏的移动</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">`ctrl+w H` 把当前分屏移动到最左边</span><br><span class="line">`ctrl+w K` 把当前分屏移动到上面并扩展到整屏的宽度</span><br><span class="line">`ctrl+w J` 把当前分屏移动到最下边</span><br><span class="line">`ctrl+w L` 把当前分屏移动到最右边</span><br></pre></td></tr></table></figure>
-
-<h3 id="关闭分屏"><a href="#关闭分屏" class="headerlink" title="关闭分屏"></a>关闭分屏</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">`ctrl+w c` 关闭当前子屏</span><br><span class="line">`ctrl+w q` 关闭当前子屏，若为最后一个，则退出vim</span><br><span class="line">`:hide` 关闭当前窗口</span><br><span class="line">`:only` 仅保持此窗口开启</span><br></pre></td></tr></table></figure>
-
-
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 
 
@@ -1237,7 +1258,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

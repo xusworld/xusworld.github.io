@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xusworld.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="磁盘管理必须用起来才有价值 Linux磁盘监控工具说明 - 云+社区 - 腾讯云 12cd、iotop、iostat、dirs、df、du、mkdir、quota、rmdir、stat、tree、mount、unmount、badblocks、dd、fsck、sync、   cd切换用户当前工作目录 实例 1234567891011121314- 进入用户主目录$cd- 进入用户主目录$cd ~-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令必知必会 - 磁盘管理">
+<meta property="og:url" content="https://xusworld.github.io/2021/08/11/basic-linux-command-disk/index.html">
+<meta property="og:site_name" content="Tatooine">
+<meta property="og:description" content="磁盘管理必须用起来才有价值 Linux磁盘监控工具说明 - 云+社区 - 腾讯云 12cd、iotop、iostat、dirs、df、du、mkdir、quota、rmdir、stat、tree、mount、unmount、badblocks、dd、fsck、sync、   cd切换用户当前工作目录 实例 1234567891011121314- 进入用户主目录$cd- 进入用户主目录$cd ~-">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-11T04:53:04.000Z">
+<meta property="article:modified_time" content="2021-08-11T04:53:44.274Z">
+<meta property="article:author" content="xusworld">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://xusworld.github.io/2021/08/11/basic-linux-command-disk/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Linux命令必知必会 - 磁盘管理 | Tatooine</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Tatooine</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/xusworld" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xusworld.github.io/2021/08/11/basic-linux-command-disk/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xusworld">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tatooine">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux命令必知必会 - 磁盘管理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-11 12:53:04 / 修改时间：12:53:44" itemprop="dateCreated datePublished" datetime="2021-08-11T12:53:04+08:00">2021-08-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="磁盘管理"><a href="#磁盘管理" class="headerlink" title="磁盘管理"></a>磁盘管理</h2><p>必须用起来才有价值</p>
+<p><a href="https://link.zhihu.com/?target=https://cloud.tencent.com/developer/article/1149190">Linux磁盘监控工具说明 - 云+社区 - 腾讯云</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span>、iotop、iostat、<span class="built_in">dirs</span>、df、du、mkdir、quota、rmdir、<span class="built_in">stat</span>、tree、mount、unmount、</span><br><span class="line">badblocks、dd、fsck、sync、</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="cd"><a href="#cd" class="headerlink" title="cd"></a>cd</h3><p>切换用户当前工作目录</p>
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- 进入用户主目录</span><br><span class="line"><span class="variable">$cd</span></span><br><span class="line"></span><br><span class="line">- 进入用户主目录</span><br><span class="line"><span class="variable">$cd</span> ~</span><br><span class="line"></span><br><span class="line">- 进入根目录</span><br><span class="line"><span class="variable">$cd</span> / </span><br><span class="line"></span><br><span class="line">- 返回上级目录</span><br><span class="line"><span class="variable">$cd</span> ..  </span><br><span class="line"></span><br><span class="line">- 返回上两级目录</span><br><span class="line"><span class="variable">$cd</span> ../..</span><br></pre></td></tr></table></figure>
+
+<h3 id="df"><a href="#df" class="headerlink" title="df"></a>df</h3><p>显示磁盘相关的数据</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">-a或--all：包含全部的文件系统；</span><br><span class="line">--block-size=&lt;区块大小&gt;：以指定的区块大小来显示区块数目；</span><br><span class="line">-h或--human-readable：以可读性较高的方式来显示信息；</span><br><span class="line">-H或--si：与-h参数相同，但在计算时是以1000 Bytes为换算单位而非1024 Bytes；</span><br><span class="line">-i或--inodes：显示inode的信息；</span><br><span class="line">-k或--kilobytes：指定区块大小为1024字节；</span><br><span class="line">-l或--local：仅显示本地端的文件系统；</span><br><span class="line">-m或--megabytes：指定区块大小为1048576字节；</span><br><span class="line">--no-sync：在取得磁盘使用信息前，不要执行sync指令，此为预设值；</span><br><span class="line">-P或--portability：使用POSIX的输出格式；</span><br><span class="line">--sync：在取得磁盘使用信息前，先执行sync指令；</span><br><span class="line">-t&lt;文件系统类型&gt;或--type=&lt;文件系统类型&gt;：仅显示指定文件系统类型的磁盘信息；</span><br><span class="line">-T或--print-type：显示文件系统的类型；</span><br><span class="line">-x&lt;文件系统类型&gt;或--exclude-type=&lt;文件系统类型&gt;：不要显示指定文件系统类型的磁盘信息；</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br></pre></td><td class="code"><pre><span class="line">- 查看系统磁盘设备，默认以 KB 为单位</span><br><span class="line">$ df</span><br><span class="line">Filesystem     1K-blocks     Used Available Use% Mounted on</span><br><span class="line">/dev/vda1      103079868 12081020  86578848  13% /</span><br><span class="line">devtmpfs        32844900        0  32844900   0% /dev</span><br><span class="line">tmpfs           32855168        0  32855168   0% /dev/shm</span><br><span class="line">tmpfs           32855168   271888  32583280   1% /run</span><br><span class="line">tmpfs           32855168        0  32855168   0% /sys/fs/cgroup</span><br><span class="line">/dev/vdb1      515927296    73752 489622812   1% /data</span><br><span class="line">tmpfs            6571036        0   6571036   0% /run/user/0</span><br><span class="line"></span><br><span class="line">- 查看系统磁盘设备(可读性)</span><br><span class="line">$ df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/vda1        99G   12G   83G  13% /</span><br><span class="line">devtmpfs         32G     0   32G   0% /dev</span><br><span class="line">tmpfs            32G     0   32G   0% /dev/shm</span><br><span class="line">tmpfs            32G  266M   32G   1% /run</span><br><span class="line">tmpfs            32G     0   32G   0% /sys/fs/cgroup</span><br><span class="line">/dev/vdb1       493G   73M  467G   1% /data</span><br><span class="line">tmpfs           6.3G     0  6.3G   0% /run/user/0</span><br><span class="line"></span><br><span class="line">- 查看全部文件系统</span><br><span class="line">$ df -a -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">rootfs             -     -     -    - /</span><br><span class="line">sysfs              0     0     0    - /sys</span><br><span class="line">proc               0     0     0    - /proc</span><br><span class="line">devtmpfs         32G     0   32G   0% /dev</span><br><span class="line">securityfs         0     0     0    - /sys/kernel/security</span><br><span class="line">tmpfs            32G     0   32G   0% /dev/shm</span><br><span class="line">devpts             0     0     0    - /dev/pts</span><br><span class="line">tmpfs            32G  266M   32G   1% /run</span><br><span class="line">tmpfs            32G     0   32G   0% /sys/fs/cgroup</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/systemd</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/oom</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/memory</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/pids</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/net_cls</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/devices</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup             0     0     0    - /sys/fs/cgroup/perf_event</span><br><span class="line">configfs           0     0     0    - /sys/kernel/config</span><br><span class="line">/dev/vda1        99G   12G   83G  13% /</span><br><span class="line">debugfs            0     0     0    - /sys/kernel/debug</span><br><span class="line">hugetlbfs          0     0     0    - /dev/hugepages</span><br><span class="line">systemd-1          -     -     -    - /proc/sys/fs/binfmt_misc</span><br><span class="line">sunrpc             0     0     0    - /var/lib/nfs/rpc_pipefs</span><br><span class="line">mqueue             0     0     0    - /dev/mqueue</span><br><span class="line">nfsd               0     0     0    - /proc/fs/nfsd</span><br><span class="line">binfmt_misc        0     0     0    - /proc/sys/fs/binfmt_misc</span><br><span class="line">/dev/vdb1       493G   73M  467G   1% /data</span><br><span class="line">tmpfs           6.3G     0  6.3G   0% /run/user/0</span><br><span class="line"></span><br><span class="line">- 以inode 模式显示磁盘的使用情况</span><br><span class="line">$ df -i -h</span><br><span class="line">Filesystem     Inodes IUsed IFree IUse% Mounted on</span><br><span class="line">/dev/vda1        6.3M  457K  5.9M    8% /</span><br><span class="line">devtmpfs         7.9M  1.5K  7.9M    1% /dev</span><br><span class="line">tmpfs            7.9M     1  7.9M    1% /dev/shm</span><br><span class="line">tmpfs            7.9M  1.3K  7.9M    1% /run</span><br><span class="line">tmpfs            7.9M    15  7.9M    1% /sys/fs/cgroup</span><br><span class="line">/dev/vdb1         32M    11   32M    1% /data</span><br><span class="line">tmpfs            7.9M     1  7.9M    1% /run/user/0</span><br><span class="line"></span><br><span class="line">- 列出各文件系统的i节点使用情况</span><br><span class="line">$ df -iah </span><br><span class="line">Filesystem     Inodes IUsed IFree IUse% Mounted on</span><br><span class="line">rootfs              -     -     -     - /</span><br><span class="line">sysfs               0     0     0     - /sys</span><br><span class="line">proc                0     0     0     - /proc</span><br><span class="line">devtmpfs         7.9M  1.5K  7.9M    1% /dev</span><br><span class="line">securityfs          0     0     0     - /sys/kernel/security</span><br><span class="line">tmpfs            7.9M     1  7.9M    1% /dev/shm</span><br><span class="line">devpts              0     0     0     - /dev/pts</span><br><span class="line">tmpfs            7.9M  1.3K  7.9M    1% /run</span><br><span class="line">tmpfs            7.9M    15  7.9M    1% /sys/fs/cgroup</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/systemd</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/hugetlb</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/oom</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/blkio</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/memory</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/pids</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/cpu,cpuacct</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/cpuset</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/net_cls</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/devices</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/freezer</span><br><span class="line">cgroup              0     0     0     - /sys/fs/cgroup/perf_event</span><br><span class="line">configfs            0     0     0     - /sys/kernel/config</span><br><span class="line">/dev/vda1        6.3M  457K  5.9M    8% /</span><br><span class="line">debugfs             0     0     0     - /sys/kernel/debug</span><br><span class="line">hugetlbfs           0     0     0     - /dev/hugepages</span><br><span class="line">systemd-1           -     -     -     - /proc/sys/fs/binfmt_misc</span><br><span class="line">sunrpc              0     0     0     - /var/lib/nfs/rpc_pipefs</span><br><span class="line">mqueue              0     0     0     - /dev/mqueue</span><br><span class="line">nfsd                0     0     0     - /proc/fs/nfsd</span><br><span class="line">binfmt_misc         0     0     0     - /proc/sys/fs/binfmt_misc</span><br><span class="line">/dev/vdb1         32M    11   32M    1% /data</span><br><span class="line">tmpfs            7.9M     1  7.9M    1% /run/user/0</span><br><span class="line"></span><br><span class="line">- 列出文件系统的类型</span><br><span class="line">$ df -Th</span><br><span class="line">Filesystem     Type      Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/vda1      ext4       99G   12G   83G  13% /</span><br><span class="line">devtmpfs       devtmpfs   32G     0   32G   0% /dev</span><br><span class="line">tmpfs          tmpfs      32G     0   32G   0% /dev/shm</span><br><span class="line">tmpfs          tmpfs      32G  266M   32G   1% /run</span><br><span class="line">tmpfs          tmpfs      32G     0   32G   0% /sys/fs/cgroup</span><br><span class="line">/dev/vdb1      ext4      493G   73M  467G   1% /data</span><br><span class="line">tmpfs          tmpfs     6.3G     0  6.3G   0% /run/user/0</span><br></pre></td></tr></table></figure>
+
+<h3 id="du"><a href="#du" class="headerlink" title="du"></a>du</h3><p>显示每个文件和目录的磁盘使用空间</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">-c, --total                            除了显示个别目录或文件的大小外，同时也显示所有目录或文件的总和。</span><br><span class="line">-D, --dereference-args                 显示指定符号链接的源文件大小。</span><br><span class="line">-H, --si                               与-h参数相同，但是K，M，G是以1000为换算单位。</span><br><span class="line">-h, --human-readable                   以K，M，G为单位，提高信息的可读性。</span><br><span class="line">-k, --kilobytes                        以KB(1024bytes)为单位输出。</span><br><span class="line">-l, --count-links                      重复计算硬件链接的文件。</span><br><span class="line">-m, --megabytes                        以MB为单位输出。</span><br><span class="line">-L&lt;符号链接&gt;, --dereference&lt;符号链接&gt;  显示选项中所指定符号链接的源文件大小。</span><br><span class="line">-P, --no-dereference                   不跟随任何符号链接(默认)</span><br><span class="line">-0, --null                             将每个空行视作0 字节而非换行符</span><br><span class="line">-S, --separate-dirs                    显示个别目录的大小时，并不含其子目录的大小。</span><br><span class="line">-s, --summarize                        仅显示总计，只列出最后加总的值。</span><br><span class="line">-x, --one-file-xystem                  以一开始处理时的文件系统为准，若遇上其它不同的文件系统目录则略过。</span><br><span class="line">-X&lt;文件&gt;, --exclude-from=&lt;文件&gt;        在&lt;文件&gt;指定目录或文件。</span><br><span class="line">--apparent-size                        显示表面用量，而并非是磁盘用量；虽然表面用量通常会小一些，但有时它会因为稀疏文件间的&quot;洞&quot;、内部碎片、非直接引用的块等原因而变大。</span><br><span class="line">--files0-from=F                        计算文件F中以NUL结尾的文件名对应占用的磁盘空间如果F的值是&quot;-&quot;，则从标准输入读入文件名</span><br><span class="line">--exclude=&lt;目录或文件&gt;                 略过指定的目录或文件。</span><br><span class="line">--max-depth=N                          显示目录总计(与--all 一起使用计算文件)当N为指定数值时计算深度为N，等于0时等同--summarize</span><br><span class="line">--si                                   类似-h，但在计算时使用1000 为基底而非1024</span><br><span class="line">--time                                 显示目录或该目录子目录下所有文件的最后修改时间</span><br><span class="line">--time=WORD                            显示WORD时间，而非修改时间：atime，access，use，ctime 或status</span><br><span class="line">--time-style=样式                      按照指定样式显示时间(样式解释规则同&quot;date&quot;命令)：full-iso，long-iso，iso，+FORMAT</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">- 文件从大到小排序</span><br><span class="line">$ du -sh * |sort -rh</span><br><span class="line">2.9M    <span class="built_in">command</span></span><br><span class="line">1.9M    assets</span><br><span class="line">148K    template</span><br><span class="line">72K     package-lock.json</span><br><span class="line">52K     dist</span><br><span class="line">28K     build</span><br><span class="line">16K     README.md</span><br><span class="line">4.0K    renovate.json</span><br><span class="line">4.0K    package.json</span><br><span class="line">4.0K    LICENSE</span><br><span class="line"></span><br><span class="line">- 只显示当前目录下子目录的大小</span><br><span class="line">$ du -sh ./*/</span><br><span class="line">1.9M    ./assets/</span><br><span class="line">28K     ./build/</span><br><span class="line">2.9M    ./<span class="built_in">command</span>/</span><br><span class="line">52K     ./dist/</span><br><span class="line">148K    ./template/</span><br><span class="line"></span><br><span class="line">- 查看指定目录下文件所占的空间</span><br><span class="line">$ du ./*</span><br><span class="line">144     ./alfred.png</span><br><span class="line">452     ./chrome-extensions.gif</span><br><span class="line">4       ./dash-icon.png</span><br><span class="line">1312    ./Linux.gif</span><br><span class="line">16      ./qr.png</span><br><span class="line"></span><br><span class="line">- 只显示总和的大小</span><br><span class="line">$ du -s -h .</span><br><span class="line">236M    .</span><br></pre></td></tr></table></figure>
+
+<h3 id="mkdir"><a href="#mkdir" class="headerlink" title="mkdir"></a>mkdir</h3><p>创建目录</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-m&lt;目标属性&gt;或--mode&lt;目标属性&gt;建立目录的同时设置目录的权限；</span><br><span class="line">-p或--parents 若所要建立目录的上层目录目前尚未建立，则会一并建立上层目录；</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在目录/usr/local下建立子目录test，并且只有文件主有读、写和执行权限，其他人无权访问</span></span><br><span class="line">$ mkdir -m 700 /usr/<span class="built_in">local</span>/<span class="built_in">test</span></span><br><span class="line"></span><br><span class="line">$ mkdir -p  bin/os</span><br></pre></td></tr></table></figure>
+
+<h3 id="rmdir"><a href="#rmdir" class="headerlink" title="rmdir"></a>rmdir</h3><p>删除空目录</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-p或--parents：删除指定目录后，若该目录的上层目录已变成空目录，则将其一并删除；</span><br><span class="line">--ignore-fail-on-non-empty：此选项使rmdir命令忽略由于删除非空目录时导致的错误信息；</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ rm dir</span><br><span class="line">$ rm -p path/to/dir</span><br></pre></td></tr></table></figure>
+
+<h3 id="quota"><a href="#quota" class="headerlink" title="quota"></a>quota</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/quota.html">quota 命令，Linux quota 命令详解：显示磁盘已使用的空间与限制</a></p>
+<h3 id="stat"><a href="#stat" class="headerlink" title="stat"></a>stat</h3><p>用于显示文件的状态信息</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-L：支持符号连接；</span><br><span class="line">-f：显示文件系统状态而非文件状态；</span><br><span class="line">-t：以简洁方式输出信息；</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ ls -l myfile</span><br><span class="line">-rw-r--r-- 1 root root 0 2010-10-09 myfile</span><br><span class="line"></span><br><span class="line">$ stat myfile</span><br><span class="line">file: “myfile”</span><br><span class="line">Size: 0               Blocks: 8          IO Block: 4096   一般空文件</span><br><span class="line">Device: fd00h/64768d    Inode: 194805815   Links: 1</span><br><span class="line">Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)</span><br><span class="line">Access: 2010-12-12 12:22:35.000000000 +0800</span><br><span class="line">Modify: 2010-10-09 20:44:21.000000000 +0800</span><br><span class="line">Change: 2010-10-09 20:44:21.000000000 +0800</span><br><span class="line"></span><br><span class="line">$ stat -t myfile</span><br><span class="line">myfile 0 8 81a4 0 0 fd00 194805815 1 0 0 1292127755 1286628261 1286628261 4096</span><br></pre></td></tr></table></figure>
+
+<h3 id="tree"><a href="#tree" class="headerlink" title="tree"></a>tree</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/tree.html">tree 命令，Linux tree 命令详解：树状图列出目录的内容</a></p>
+<p>树状图列出目录的内容</p>
+<p><strong>选项</strong></p>
+<h3 id="mount"><a href="#mount" class="headerlink" title="mount"></a>mount</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/mount.html">mount 命令，Linux mount 命令详解：用于挂载Linux系统外的文件</a></p>
+<h3 id="unmount"><a href="#unmount" class="headerlink" title="unmount"></a>unmount</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/umount.html">umount 命令，Linux umount 命令详解：用于卸载已经加载的文件系统</a></p>
+<h3 id="badblocks"><a href="#badblocks" class="headerlink" title="badblocks"></a>badblocks</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/badblocks.html">badblocks 命令，Linux badblocks 命令详解：查找磁盘中损坏的区块</a></p>
+<h3 id="dd"><a href="#dd" class="headerlink" title="dd"></a>dd</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/dd.html">dd 命令，Linux dd 命令详解：复制文件并对原文件的内容进行转换和格式化处理</a></p>
+<h3 id="fsck"><a href="#fsck" class="headerlink" title="fsck"></a>fsck</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/fsck.html">fsck 命令，Linux fsck 命令详解：检查并且试图修复文件系统中的错误</a></p>
+<h3 id="sync"><a href="#sync" class="headerlink" title="sync"></a>sync</h3><p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/sync.html">sync 命令，Linux sync 命令详解：用于强制被改变的内容立刻写入磁盘</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/11/basic-linux-command-network/" rel="prev" title="Linux命令必知必会 - 网络通讯">
+      <i class="fa fa-chevron-left"></i> Linux命令必知必会 - 网络通讯
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">磁盘管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cd"><span class="nav-number">1.1.</span> <span class="nav-text">cd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#df"><span class="nav-number">1.2.</span> <span class="nav-text">df</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#du"><span class="nav-number">1.3.</span> <span class="nav-text">du</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mkdir"><span class="nav-number">1.4.</span> <span class="nav-text">mkdir</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rmdir"><span class="nav-number">1.5.</span> <span class="nav-text">rmdir</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#quota"><span class="nav-number">1.6.</span> <span class="nav-text">quota</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stat"><span class="nav-number">1.7.</span> <span class="nav-text">stat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tree"><span class="nav-number">1.8.</span> <span class="nav-text">tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mount"><span class="nav-number">1.9.</span> <span class="nav-text">mount</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#unmount"><span class="nav-number">1.10.</span> <span class="nav-text">unmount</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#badblocks"><span class="nav-number">1.11.</span> <span class="nav-text">badblocks</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dd"><span class="nav-number">1.12.</span> <span class="nav-text">dd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fsck"><span class="nav-number">1.13.</span> <span class="nav-text">fsck</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sync"><span class="nav-number">1.14.</span> <span class="nav-text">sync</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">xusworld</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xusworld</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
