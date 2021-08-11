@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xusworld.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="文件管理本文介绍Linux中文件管理的常用命令，命令使用频率非常高。 12cat、cp、find、mv、rm、tee、cut、ln、touch、whereis、which、 locate、 chgrp、chmod、chown、mktemp、 od、 paste、split、umask、cmp   cat用以连接多个文件，打印到标准输出 选项 123-b, --number-nonblank">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux命令必知必会 - 文件管理">
+<meta property="og:url" content="https://xusworld.github.io/2021/08/11/basic-linux-command-file/index.html">
+<meta property="og:site_name" content="Tatooine">
+<meta property="og:description" content="文件管理本文介绍Linux中文件管理的常用命令，命令使用频率非常高。 12cat、cp、find、mv、rm、tee、cut、ln、touch、whereis、which、 locate、 chgrp、chmod、chown、mktemp、 od、 paste、split、umask、cmp   cat用以连接多个文件，打印到标准输出 选项 123-b, --number-nonblank">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-11T04:20:31.000Z">
+<meta property="article:modified_time" content="2021-08-11T04:22:38.922Z">
+<meta property="article:author" content="xusworld">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://xusworld.github.io/2021/08/11/basic-linux-command-file/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Linux命令必知必会 - 文件管理 | Tatooine</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Tatooine</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/xusworld" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xusworld.github.io/2021/08/11/basic-linux-command-file/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xusworld">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tatooine">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Linux命令必知必会 - 文件管理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-11 12:20:31 / 修改时间：12:22:38" itemprop="dateCreated datePublished" datetime="2021-08-11T12:20:31+08:00">2021-08-11</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="文件管理"><a href="#文件管理" class="headerlink" title="文件管理"></a>文件管理</h2><p>本文介绍Linux中文件管理的常用命令，命令使用频率非常高。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cat、cp、find、mv、rm、tee、cut、ln、touch、whereis、<span class="built_in">which</span>、 locate、 </span><br><span class="line">chgrp、chmod、chown、mktemp、 od、 paste、split、<span class="built_in">umask</span>、cmp</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h3><p>用以连接多个文件，打印到标准输出</p>
+<p><strong>选项</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-b, --number-nonblank    只对非空行编号，从1开始编号，覆盖<span class="string">&quot;-n&quot;</span>选项</span><br><span class="line">-n, --number             对所有行编号，从1开始编号</span><br><span class="line">-s, --squeeze-blank      压缩连续的空行到一行</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- 打印文件内容到标准输出</span><br><span class="line">    <span class="variable">$cat</span> file</span><br><span class="line"></span><br><span class="line">- 合并多个文件到目标文件</span><br><span class="line">    <span class="variable">$cat</span> file1 file2 &gt; target_file</span><br><span class="line"></span><br><span class="line">- 追加多个文件到目标文件</span><br><span class="line">    <span class="variable">$cat</span> file1 file2 &gt;&gt; target_file</span><br><span class="line"></span><br><span class="line">- 打印文件内容到标准输出，并在所有行之前附加行号</span><br><span class="line">    <span class="variable">$cat</span> -n file</span><br><span class="line"></span><br><span class="line">- 打印文件内容到标准输出，并在非空行之前附加行号</span><br><span class="line">    <span class="variable">$cat</span> -b file</span><br></pre></td></tr></table></figure>
+
+<h3 id="find"><a href="#find" class="headerlink" title="find"></a>find</h3><p>在指定的目录树下查找文件或目录</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-name pattern    指定字符串作为寻找文件或目录的正则表达式</span><br><span class="line">-iname pattern   此参数的效果和指定“-name”参数类似，但忽略字符大小写的差别</span><br><span class="line">-type &lt;文件类型&gt; 只寻找符合指定的文件类型的文件</span><br><span class="line">-path pattern    指定字符串作为寻找目录的范本样式</span><br><span class="line">-size n[cwbkMG]  查找符合指定的文件大小的文件</span><br><span class="line">-mtime n       查找在指定时间曾被更改过的文件或目录，单位以24小时计算</span><br><span class="line">-atime n       查找在指定时间曾被存取过的文件或目录，单位以24小时计算</span><br><span class="line">-ctime n       查找在指定时间之时被更改的文件或目录，单位以24小时计算；</span><br><span class="line">-maxdepth &lt;目录层级&gt; 设置最大目录层级</span><br><span class="line">-mindepth &lt;目录层级&gt; 设置最小目录层级</span><br><span class="line">-exec &lt;指令&gt;     若find指令的回传值为True，就执行该指令</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 按匹配模式查找</span></span><br><span class="line">- 在 root_path 目录下查找以 .ext 结尾的文件</span><br><span class="line">    <span class="variable">$find</span> root_path -name <span class="string">&#x27;*.ext&#x27;</span></span><br><span class="line"></span><br><span class="line">- 在 root_path 目录下查找 <span class="string">&#x27;*pattern_1*&#x27;</span> 和 <span class="string">&#x27;*pattern_2*&#x27;</span>两种匹配模式</span><br><span class="line">    <span class="variable">$find</span> root_path -name <span class="string">&#x27;*pattern_1*&#x27;</span> -or -name <span class="string">&#x27;*pattern_2*&#x27;</span></span><br><span class="line"></span><br><span class="line">- 在 root_path 目录下查找匹配模式为 <span class="string">&#x27;*lib*&#x27;</span> 的目录，忽略大小写</span><br><span class="line">    <span class="variable">$find</span> root_path -<span class="built_in">type</span> d -iname <span class="string">&#x27;*lib*&#x27;</span></span><br><span class="line">      <span class="comment"># -type 文件类型 </span></span><br><span class="line">      b      block (buffered) special</span><br><span class="line">      c      character (unbuffered) special</span><br><span class="line">      d      directory</span><br><span class="line">      p      named pipe (FIFO)</span><br><span class="line">      f      regular file</span><br><span class="line">      l      symbolic link; this is never <span class="literal">true</span> <span class="keyword">if</span> the -L option or the -follow option is <span class="keyword">in</span> effect, unless the symbolic link is broken.  If you want to search <span class="keyword">for</span> symbolic links when -L is <span class="keyword">in</span> effect, use -xtype.</span><br><span class="line">      s      socket</span><br><span class="line"></span><br><span class="line">- Find files matching a path pattern:</span><br><span class="line">    <span class="variable">$find</span> root_path -path <span class="string">&#x27;**/lib/**/*.ext&#x27;</span></span><br><span class="line"></span><br><span class="line">- 在 root_path 目录下查找以 .py 结尾的文件，排除 */site-packages/* 目录</span><br><span class="line">    <span class="variable">$find</span> root_path -name <span class="string">&#x27;*.py&#x27;</span> -not -path <span class="string">&#x27;*/site-packages/*&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 按文件大小查找</span></span><br><span class="line">- 在 root_path 目录中查找文件大小大于 1G 的文件</span><br><span class="line">    <span class="variable">$find</span> root_path -size +1G</span><br><span class="line"></span><br><span class="line">- 在 root_path 目录中查找文件大小小于 1G 的文件</span><br><span class="line">    <span class="variable">$find</span> root_path -size +1G</span><br><span class="line"></span><br><span class="line">- 在 root_path 目录下查找文件大小在 500K 到 10M 之间的文件</span><br><span class="line">    <span class="variable">$find</span> root_path -size +500k -size -10M</span><br><span class="line"></span><br><span class="line"><span class="comment"># 按时间查找</span></span><br><span class="line">   1. 访问时间 （-atime/天，-amin/分钟）：用户最近一次访问时间</span><br><span class="line">   2. 修改时间 （-mtime/天，-mmin/分钟）：文件最后一次修改时间</span><br><span class="line">   3. 变化时间 （-ctime/天，-cmin/分钟）：文件数据元（例如权限等）最后一次修改时间</span><br><span class="line"></span><br><span class="line">- 在 root_path 目录下查找7天以内访问的文件</span><br><span class="line">    <span class="variable">$find</span> root_path -<span class="built_in">type</span> f -atime -7</span><br><span class="line"></span><br><span class="line">- 在 root_path 目录下查找7天以前访问的文件</span><br><span class="line">    <span class="variable">$find</span> root_path -<span class="built_in">type</span> f -atime +7</span><br><span class="line"></span><br><span class="line">- 在 root_path 目录下查找过去7天前（当天）修改的文件</span><br><span class="line">    <span class="variable">$find</span> root_path -<span class="built_in">type</span> f -mtime 7</span><br><span class="line"></span><br><span class="line"><span class="comment"># 按目录深度查找</span></span><br><span class="line">- 在 root_path 目录下查找子目录中包含 makefile 文件的目录，最大目录深度为 2</span><br><span class="line">    <span class="variable">$find</span> root_path -maxdepth 2 -<span class="built_in">type</span> f -iname makefile</span><br><span class="line"></span><br><span class="line"><span class="comment"># 按用户查找</span></span><br><span class="line">- 在 root_path 目录下查找子目录中 xusworld 拥有的文件</span><br><span class="line">    <span class="variable">$find</span> root_path -owner xusworld</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查找并执行</span></span><br><span class="line">- 在 root_path 目录下查找以 .ext结尾的文件，并执行 `wl -l` 命令（&#123;&#125;用以匹配find查找到的所有文件）</span><br><span class="line">    <span class="variable">$find</span> root_path -name <span class="string">&#x27;*.ext&#x27;</span> -<span class="built_in">exec</span> wc -l &#123;&#125; \;</span><br><span class="line"></span><br><span class="line">- 在 root_path 目录下查找过去7天内修改的文件，并删除</span><br><span class="line">    <span class="variable">$find</span> root_path -mtime -7 -delete</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>mv</strong></p>
+<p>移动/重命名文件或目录</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-f 若目标文件或目录与现有的文件或目录重复，则直接覆盖现有的文件或目录</span><br><span class="line">-i 交互式操作，覆盖前先行询问用户</span><br><span class="line">-n  不覆盖已经存在的文件</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- 重命名文件</span><br><span class="line">   <span class="variable">$mv</span> <span class="built_in">source</span> target</span><br><span class="line"></span><br><span class="line">- 强制性移动文件，如果目标文件已存在，直接覆盖</span><br><span class="line">   <span class="variable">$mv</span> -f <span class="built_in">source</span> target</span><br><span class="line"></span><br><span class="line">- 非强制性移动文件，如果目标文件已存在，则会提示用户是否继续执行覆盖操作</span><br><span class="line">   <span class="variable">$mv</span> -i <span class="built_in">source</span> target</span><br><span class="line"></span><br><span class="line">- 不覆盖已经存在的文件</span><br><span class="line">   <span class="variable">$mv</span> -n <span class="built_in">source</span> target</span><br></pre></td></tr></table></figure>
+
+<p><strong>tee</strong></p>
+<p>从标准输入读取数据并重定向到标准输出和文件</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-a, --append 追加到文件中而不是覆盖</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- 读取标准输入的内容并且重定向到标准输出和FILE文件中</span><br><span class="line">    <span class="variable">$echo</span> <span class="string">&quot;example&quot;</span> | tee FILE</span><br><span class="line"></span><br><span class="line">- 读取标准输入的内容并且重定向到标准输出和追加到FILE文件中</span><br><span class="line">    <span class="variable">$echo</span> <span class="string">&quot;example&quot;</span> | tee -a FILE</span><br><span class="line"></span><br><span class="line">- Print standard input to the terminal, and also pipe it into another program <span class="keyword">for</span> further processing:</span><br><span class="line">    <span class="variable">$echo</span> <span class="string">&quot;example&quot;</span> | tee /dev/tty | xargs <span class="built_in">printf</span> <span class="string">&quot;[%s]&quot;</span></span><br><span class="line"></span><br><span class="line">- Create a directory called <span class="string">&quot;example&quot;</span>, count the number of characters <span class="keyword">in</span> <span class="string">&quot;example&quot;</span> and write <span class="string">&quot;example&quot;</span> to the terminal:</span><br><span class="line">    <span class="variable">$echo</span> <span class="string">&quot;example&quot;</span> | tee &gt;(xargs mkdir) &gt;(wc -c)</span><br></pre></td></tr></table></figure>
+
+<p><strong>cut</strong></p>
+<p>连接文件并打印到标准输出设备上</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-b 仅显示行中指定直接范围的内容</span><br><span class="line">-c 仅显示行中指定范围的字符</span><br><span class="line">-d 指定字段的分隔符，默认的字段分隔符为“TAB”</span><br><span class="line">-f 显示指定字段的内容</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">- 截取标准输入中每一行的前16个字符并打印到标准输出上</span><br><span class="line">    <span class="variable">$cut</span> -c 1-16</span><br><span class="line"></span><br><span class="line">- 截取file文件每一行的前16个字符并打印到标准输出上</span><br><span class="line">    <span class="variable">$cut</span> -c 1-16 file</span><br><span class="line"></span><br><span class="line">- 截取标准输入中每一行从该行第3个字符到行尾的字符串并打印到标准输出上</span><br><span class="line">    <span class="variable">$cut</span> -c 3-</span><br><span class="line"></span><br><span class="line">- 输出使用<span class="string">&#x27;:&#x27;</span>符号（-d指定）分割的第5个字段（-f指定）到标准输出上</span><br><span class="line">    <span class="variable">$cut</span> -d<span class="string">&#x27;:&#x27;</span> -f5</span><br><span class="line">   （输入）The:Answer:To:Life:THE:Universe:And:Everything                        </span><br><span class="line">   （输出）THE</span><br><span class="line"></span><br><span class="line">- 输出使用<span class="string">&#x27;:&#x27;</span>符号分割的第5个和第7个字段到标准输出上</span><br><span class="line">    <span class="variable">$cut</span> -d<span class="string">&#x27;:&#x27;</span> -f5,7</span><br><span class="line">   （输入）The:Answer:To:Life:THE:Universe:And:Everything</span><br><span class="line">   （输出）THE:And</span><br><span class="line"></span><br><span class="line">- 输出使用<span class="string">&#x27;:&#x27;</span>符号分割的第5个到行尾的字符串到标准输出上</span><br><span class="line">    <span class="variable">$cut</span> -d<span class="string">&#x27; &#x27;</span> -f5-</span><br><span class="line">   （输入）The:Answer:To:Life:THE:Universe:And:Everything</span><br><span class="line">   （输出）THE:Universe:And:Everything</span><br></pre></td></tr></table></figure>
+
+<p><strong>ln</strong></p>
+<p>为文件或目录创建链接</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-f, --force     强行删除任何已存在的目标文件</span><br><span class="line">-s, --symbolic  对源文件建立符号链接，而非硬链接</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- 创建一个软链接</span><br><span class="line">    <span class="variable">$ln</span> -s path/to/file_or_directory path/to/symlink</span><br><span class="line"></span><br><span class="line">- 复写一个已经存在的软链接指向其他文件</span><br><span class="line">    <span class="variable">$ln</span> -sf path/to/new_file path/to/symlink</span><br><span class="line"></span><br><span class="line">- 创建一个硬链接</span><br><span class="line">    <span class="variable">$ln</span> path/to/file path/to/hardlink</span><br></pre></td></tr></table></figure>
+
+<p><strong>touch</strong></p>
+<p>创建一个空文件或修改已存在文件的访问时间和更改时间</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-a, --time=atime或--time=access或--time=use  只修改存取时间；</span><br><span class="line">-m, --time=mtime或--time=modify  只修改更该时间；</span><br><span class="line">-t：&lt;日期时间&gt;  使用指定的日期时间，而非现在的时间；</span><br><span class="line">-r：&lt;参考文件或目录&gt;  把指定文件或目录的日期时间，统统设成和参考文件或目录的日期时间相同；</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- 创建一个空文件或修改已存在文件的访问时间和更改时间</span><br><span class="line">    <span class="variable">$touch</span> filename</span><br><span class="line"></span><br><span class="line">- 设置指定文件的日期时间</span><br><span class="line">    <span class="variable">$touch</span> -t YYYYMMDDHHMM.SS filename</span><br><span class="line"></span><br><span class="line">- 使用指定文件的日期时间设定另一个文件的日期时间</span><br><span class="line">    <span class="variable">$touch</span> -r filename filename2</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>whereis</strong></p>
+<p>用来定位指令的二进制程序、源代码文件和man手册页等相关文件的路径</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-b        只查找二进制文件路径</span><br><span class="line">-B &lt;目录&gt; 只在设置的目录下查找二进制文件</span><br><span class="line">-f        不显示文件名前的路径名称 </span><br><span class="line">-m        只查找man手册路径</span><br><span class="line">-M &lt;目录&gt; 只在设置的目录下查找说明文件 </span><br><span class="line">-s        只查找原始代码文件</span><br><span class="line">-S &lt;目录&gt; 只在设置的目录下查找原始代码文件；</span><br><span class="line">-u        查找不包含指定类型的文件。</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- 查找 ssh 的二进制/源代码文件/man手册的路径</span><br><span class="line">   <span class="variable">$whereis</span> ssh</span><br><span class="line"></span><br><span class="line">- 只查找 ls 的二进制文件/man手册的路径</span><br><span class="line">   <span class="variable">$whereis</span> -bm ls</span><br><span class="line"></span><br><span class="line">- Locate binaries <span class="keyword">for</span> gcc <span class="keyword">in</span> /usr/bin/ only:</span><br><span class="line">    <span class="variable">$whereis</span> -b -B /usr/bin/ -f gcc</span><br></pre></td></tr></table></figure>
+
+<p><strong>which</strong></p>
+<p>查找并显示给定命令的绝对路径, which指令会在环境变量$PATH设置的目录里查找符合条件的文件</p>
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$which</span> <span class="built_in">pwd</span></span><br><span class="line">/bin/<span class="built_in">pwd</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$which</span> adduser</span><br><span class="line">/usr/sbin/adduser</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://link.zhihu.com/?target=https://wangchujiang.com/linux-command/c/locate.html">locate</a></p>
+<p><strong>chgrp</strong></p>
+<p>变更文件或目录的所属群组</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-R, 递归式地改变指定目录及其下的所有子目录和文件的所属的组</span><br><span class="line">-f, --quiet或——silent：不显示错误信息</span><br><span class="line">-h, --no-dereference：只对符号连接的文件作修改，而不是改其他任何相关文件</span><br><span class="line">--reference=&lt;参考文件或目录&gt;, 把指定文件或目录的所属群组全部设成和参考文件或目录的所属群组相同</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- 修改文件或目录所属的用户组 (可通过 groups 命令查看系统上纯存在哪些用户组)</span><br><span class="line">    <span class="variable">$chgrp</span> group path/to/file_or_directory</span><br><span class="line"></span><br><span class="line">- 递归的修改目录的所有子目录和文件所属的用户组 </span><br><span class="line">    <span class="variable">$chgrp</span> -R group path/to/directory</span><br><span class="line"></span><br><span class="line">- 修改软链接（符号链接）所属的用户组</span><br><span class="line">    <span class="variable">$chgrp</span> -h group path/to/symlink</span><br><span class="line"></span><br><span class="line">- 根据参考文件或目录所属的用户组修改指定文件或目录的用户组</span><br><span class="line">    <span class="variable">$chgrp</span> --reference=path/to/reference_file path/to/file_or_directory</span><br></pre></td></tr></table></figure>
+
+<p><strong>chmod</strong></p>
+<p>变更文件或目录的访问权限</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">-c, --changes：当文件的权限更改时输出操作信息。</span><br><span class="line">-R, --recursive：对目录以及目录下的文件递归执行更改权限操作。</span><br><span class="line"></span><br><span class="line">u符号代表当前用户。</span><br><span class="line">g符号代表和当前用户在同一个组的用户，以下简称组用户。</span><br><span class="line">o符号代表其他用户。</span><br><span class="line">a符号代表所有用户。</span><br><span class="line">r符号代表读权限以及八进制数4。</span><br><span class="line">w符号代表写权限以及八进制数2。</span><br><span class="line">x符号代表执行权限以及八进制数1。</span><br><span class="line">X符号代表如果目标文件是可执行文件或目录，可给其设置可执行权限。</span><br><span class="line">s符号代表设置权限suid和sgid，使用权限组合u+s设定文件的用户的ID位，g+s设置组用户ID位。</span><br><span class="line">t符号代表只有目录或文件的所有者才可以删除目录下的文件。</span><br><span class="line">+符号代表添加目标用户相应的权限。</span><br><span class="line">-符号代表删除目标用户相应的权限。</span><br><span class="line">=符号代表添加目标用户相应的权限，删除未提到的权限。</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">- 添加当前用户的执行权限</span><br><span class="line">    <span class="variable">$chmod</span> u+x file</span><br><span class="line"></span><br><span class="line">- 添加当前用户的读写权限</span><br><span class="line">    <span class="variable">$chmod</span> u+rw file_or_directory</span><br><span class="line"></span><br><span class="line">- 删除组用户的执行权限</span><br><span class="line">    <span class="variable">$chmod</span> g-x file</span><br><span class="line"></span><br><span class="line">- 添加所有用户的读和执行权限</span><br><span class="line">    <span class="variable">$chmod</span> a+rx file</span><br><span class="line"></span><br><span class="line">- 使其他用户和组用户具有相同的权限</span><br><span class="line">    <span class="variable">$chmod</span> o=g file</span><br><span class="line"></span><br><span class="line">- 删除其他用户的所有权限</span><br><span class="line">    <span class="variable">$chmod</span> o= file</span><br><span class="line"></span><br><span class="line">- 当前用户具有所有权限，组用户有读写权限，其他用户只有读权限。</span><br><span class="line">    <span class="variable">$chmod</span> u=rwx, g=rw, o=r file</span><br><span class="line"></span><br><span class="line">- 将目录以及目录下的文件都设置为所有用户拥有读写权限</span><br><span class="line">  注意，使用<span class="string">&#x27;-R&#x27;</span>选项一定要保留当前用户的执行和读取权限，否则会报错！ </span><br><span class="line">    <span class="variable">$chmod</span> -R a=rw ./testdir/</span><br></pre></td></tr></table></figure>
+
+<p><strong>chown</strong></p>
+<p>变更文件或目录的所有者或所属群组</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-h, --no-dereference  只对符号连接的文件作修改，而不更改其他任何相关文件；</span><br><span class="line">-R, ——recursive     递归处理，将指定目录下的所有文件及子目录一并处理；</span><br><span class="line">--reference=&lt;参考文件或目录&gt; 把指定文件或目录的拥有者与所属群组全部设成和参考文件或目录的拥有者与所属群组相同；</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- 修改文件所有者</span><br><span class="line">    <span class="variable">$chown</span> user path/to/file_or_directory</span><br><span class="line"></span><br><span class="line">- 修改文件所有者和所属群组</span><br><span class="line">    <span class="variable">$chown</span> user:group path/to/file_or_directory</span><br><span class="line"></span><br><span class="line">- 修改指定目录下的所有子目录和文件的所有者</span><br><span class="line">    <span class="variable">$chown</span> -R user path/to/directory</span><br><span class="line"></span><br><span class="line">- 修改软链接的所有者</span><br><span class="line">    <span class="variable">$chown</span> -h user path/to/symlink</span><br><span class="line"></span><br><span class="line">- Change the owner of a file/directory to match a reference file:</span><br><span class="line">    <span class="variable">$chown</span> --reference=path/to/reference_file path/to/file_or_directory</span><br></pre></td></tr></table></figure>
+
+<p><strong>mktemp</strong></p>
+<p>创建一个临时文件或目录</p>
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">- 创建一个临时文件并返回其绝对路径</span><br><span class="line">    <span class="variable">$mktemp</span></span><br><span class="line"></span><br><span class="line">- 创建一个临时目录并返回其绝对路径</span><br><span class="line">    <span class="variable">$mktemp</span> -d</span><br><span class="line"></span><br><span class="line">- 创建一个以 <span class="string">&#x27;.txt&#x27;</span> 结尾的临时文件并返回其绝对路径</span><br><span class="line">    <span class="variable">$mktemp</span> --suffix <span class="string">&quot;.txt&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>od</strong></p>
+<p>用于输出文件的八进制、十六进制或其它格式编码的字节，通常用于显示或查看文件中不能直接显示在终端的字符</p>
+<p><strong>选项</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">-A ( 地址进制)按指定的进制显示地址信息</span><br><span class="line"></span><br><span class="line">o：八进制（系统默认值）</span><br><span class="line">d：十进制</span><br><span class="line">x：十六进制</span><br><span class="line">n：不打印位移值</span><br><span class="line"></span><br><span class="line">-t 指定数据显示的格式</span><br><span class="line">c：ASCII字符或反斜杠序列(如\n)</span><br><span class="line">d：有符号十进制数</span><br><span class="line">f：浮点数</span><br><span class="line">o：八进制（系统默认值）</span><br><span class="line">u：无符号十进制数</span><br><span class="line">x：十六进制数</span><br><span class="line"></span><br><span class="line">-t &lt;输出格式&gt; 设置输出格式</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">- Display file using default settings: octal format, 8 bytes per line, byte offsets <span class="keyword">in</span> octal, and duplicate lines replaced with `*`:</span><br><span class="line">    od path/to/file</span><br><span class="line"></span><br><span class="line">- Display file <span class="keyword">in</span> verbose mode, i.e. without replacing duplicate lines with `*`:</span><br><span class="line">    od -v path/to/file</span><br><span class="line"></span><br><span class="line">- Display file <span class="keyword">in</span> hexadecimal format (2-byte units), with byte offsets <span class="keyword">in</span> decimal format:</span><br><span class="line">    od --format=x --address-radix=d -v path/to/file</span><br><span class="line"></span><br><span class="line">- Display file <span class="keyword">in</span> hexadecimal format (1-byte units), and 4 bytes per line:</span><br><span class="line">    od --format=x1 --width=4 -v path/to/file</span><br><span class="line"></span><br><span class="line">- Display file <span class="keyword">in</span> hexadecimal format along with its character representation, and <span class="keyword">do</span> not <span class="built_in">print</span> byte offsets:</span><br><span class="line">    od --format=xz --address-radix=n -v path/to/file</span><br><span class="line"></span><br><span class="line">- Read only 100 bytes of a file starting from the 500th byte:</span><br><span class="line">    od --read-bytes 100 --skip-bytes=500 -v path/to/file</span><br></pre></td></tr></table></figure>
+
+<p><strong>paste</strong></p>
+<p>按列合并多个文件</p>
+<p><strong>选项</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-d &lt;分隔符&gt;  用指定的间隔字符取代跳格字符</span><br><span class="line">-s           串列进行而非并行处理</span><br></pre></td></tr></table></figure>
+
+<p><strong>实例</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- 合并指定文件中的所有行到一行，使用TAB作为分隔符</span><br><span class="line">    <span class="variable">$paste</span> -s file</span><br><span class="line"></span><br><span class="line">- 合并指定文件中的所有行到一行，使用 -d 指定的分隔符进行分隔</span><br><span class="line">    <span class="variable">$paste</span> -s -d delimiter file</span><br><span class="line"></span><br><span class="line">- 按行合并文件，默认使用TAB作为分隔符</span><br><span class="line">    <span class="variable">$paste</span> file1 file2</span><br><span class="line"></span><br><span class="line">- 按行合并文件，默认使用 -d 指定的分隔符进行分隔</span><br><span class="line">    <span class="variable">$paste</span> -d delimiter file1 file2</span><br><span class="line"></span><br><span class="line">- Merge two files, with lines added alternatively:</span><br><span class="line">    <span class="variable">$paste</span> -d <span class="string">&#x27;\n&#x27;</span> file1 file2</span><br></pre></td></tr></table></figure>
+
+<p><strong>split</strong></p>
+<p>将一个大文件分割成很多个小文件，有时需要将文件分割成更小的片段，比如为提高可读性，生成日志等。</p>
+<p><strong>选项</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-b 值为每一输出档案的大小，单位为 byte</span><br><span class="line">-C 每一输出档中，单行的最大 byte 数</span><br><span class="line">-d 使用数字作为后缀</span><br><span class="line">-l 值为每一输出档的行数大小</span><br><span class="line">-a 指定后缀长度(默认为2)</span><br></pre></td></tr></table></figure>
+
+<p>实例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- 分割一个文件为多个小文件，每个文件中有10行内容（除最后一个文件之外）</span><br><span class="line">    <span class="variable">$split</span> -l 10 filename</span><br><span class="line"></span><br><span class="line">- 分割一个文件为多个512字节大小的小文件</span><br><span class="line">    <span class="variable">$split</span> -b 512 filename</span><br><span class="line"></span><br><span class="line">- 分割一个文件为多个10k大小的小文件</span><br><span class="line">    <span class="variable">$split</span> -b 10k filename</span><br><span class="line"></span><br><span class="line">- 分割一个文件为多个10k大小的小文件, 使用 -d 指定输出小文件名以数字作为后缀，-a 指定输出小文件名长度为 3</span><br><span class="line">    <span class="variable">$split</span> -b 10k filename -d -a 3</span><br></pre></td></tr></table></figure>
+
+<p><strong>unmask</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Manage the <span class="built_in">read</span>/write/execute permissions that are masked out (i.e. restricted) <span class="keyword">for</span> newly created files by the user.</span><br><span class="line"></span><br><span class="line">- Display the current mask <span class="keyword">in</span> octal notation:</span><br><span class="line">    <span class="variable">$umask</span></span><br><span class="line"></span><br><span class="line">- Display the current mask <span class="keyword">in</span> symbolic (human-readable) mode:</span><br><span class="line">    <span class="variable">$umask</span> -S</span><br><span class="line"></span><br><span class="line">- Change the mask symbolically to allow <span class="built_in">read</span> permission <span class="keyword">for</span> all users (the rest of the mask bits are unchanged):</span><br><span class="line">    <span class="variable">$umask</span> a+r</span><br><span class="line"></span><br><span class="line">- Set the mask (using octal) to restrict no permissions <span class="keyword">for</span> the files owner, and restrict all permissions <span class="keyword">for</span> everyone <span class="keyword">else</span>:</span><br><span class="line">    <span class="variable">$umask</span> 077</span><br></pre></td></tr></table></figure>
+
+<p><strong>cmp</strong></p>
+<p>逐字节比较两个文件的差异</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">- 逐字节比较两个文件</span><br><span class="line">    <span class="variable">$cmp</span> file1 file2</span><br><span class="line"></span><br><span class="line">- 输出所有不同的字节序号和字节内容</span><br><span class="line">    <span class="variable">$cmp</span> -l file1 file2</span><br></pre></td></tr></table></figure>
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/11/basic-linux-command/" rel="prev" title="Linux命令必知必会 - 基础篇">
+      <i class="fa fa-chevron-left"></i> Linux命令必知必会 - 基础篇
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86"><span class="nav-number">1.</span> <span class="nav-text">文件管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#cat"><span class="nav-number">1.1.</span> <span class="nav-text">cat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#find"><span class="nav-number">1.2.</span> <span class="nav-text">find</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">xusworld</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xusworld</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
