@@ -20,15 +20,22 @@
     var CONFIG = {"hostname":"xusworld.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Tatooine">
-<meta property="og:url" content="https://xusworld.github.io/tags/Linux/index.html">
+  <meta name="description" content="1991年，赫尔辛基大学的大二学生Linus Torvalds发起了Linux项目。三十年后，Linus已经成为互联网世界的传奇。今天，我有一个疯狂的想法——编写一系列文章深入介绍Linux内核，以帮助自己充分吸收世界上最优秀的一群程序员的智慧成果，考虑到Linux内核现在已经有上千万行代码，这会是一项有趣、艰难且充满挑战的任务。 系列文章将使用Linux-2.6.12源码作为研究对象，以《深入理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="linux-desc">
+<meta property="og:url" content="https://xusworld.github.io/2021/08/23/linux-desc/index.html">
 <meta property="og:site_name" content="Tatooine">
+<meta property="og:description" content="1991年，赫尔辛基大学的大二学生Linus Torvalds发起了Linux项目。三十年后，Linus已经成为互联网世界的传奇。今天，我有一个疯狂的想法——编写一系列文章深入介绍Linux内核，以帮助自己充分吸收世界上最优秀的一群程序员的智慧成果，考虑到Linux内核现在已经有上千万行代码，这会是一项有趣、艰难且充满挑战的任务。 系列文章将使用Linux-2.6.12源码作为研究对象，以《深入理">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-23T09:23:00.000Z">
+<meta property="article:modified_time" content="2021-08-23T09:27:04.584Z">
 <meta property="article:author" content="xusworld">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Linux Kernel">
+<meta property="article:tag" content="源码">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://xusworld.github.io/tags/Linux/">
+<link rel="canonical" href="https://xusworld.github.io/2021/08/23/linux-desc/">
 
 
 <script id="page-configurations">
@@ -36,12 +43,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: Linux | Tatooine</title>
+  <title>linux-desc | Tatooine</title>
   
 
 
@@ -148,211 +155,100 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">Linux
-          <small>标签</small>
-        </h2>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xusworld.github.io/2021/08/23/linux-desc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xusworld">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Tatooine">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          linux-desc
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-23 17:23:00 / 修改时间：17:27:04" itemprop="dateCreated datePublished" datetime="2021-08-23T17:23:00+08:00">2021-08-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Kernel/" itemprop="url" rel="index"><span itemprop="name">Linux Kernel</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2021</span>
-    </div>
+        <p>1991年，赫尔辛基大学的大二学生Linus Torvalds发起了Linux项目。三十年后，Linus已经成为互联网世界的传奇。今天，我有一个疯狂的想法——编写一系列文章深入介绍Linux内核，以帮助自己充分吸收世界上最优秀的一群程序员的智慧成果，考虑到Linux内核现在已经有上千万行代码，这会是一项有趣、艰难且充满挑战的任务。</p>
+<p>系列文章将使用<code>Linux-2.6.12</code>源码作为研究对象，以《深入理解Linux内核》一书作为核心参考资料，开启探索美妙的Linux内核源码的旅程。</p>
+<span id="more"></span>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+<h2 id="内核代码目录"><a href="#内核代码目录" class="headerlink" title="内核代码目录"></a>内核代码目录</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">./linux</span><br><span class="line">├── COPYING 有关FSF公共许可证制度GPL的具体说明</span><br><span class="line">├── CREDITS 贡献者列表</span><br><span class="line">├── Documentation 内核文档</span><br><span class="line">├── MAINTAINERS 维护者列表</span><br><span class="line">├── Makefile 内核编译makefile</span><br><span class="line">├── README 项目介绍文档</span><br><span class="line">├── REPORTING-BUGS 报告问题文档</span><br><span class="line">├── arch arch是architecture的缩写。所有与体系结构相关的代码都对应的include/<span class="keyword">asm</span>-*/目录中。</span><br><span class="line">├── crypto 内核本身所用的加密API，实现了常用的加密和散列算法，还有一些压缩和CRC校验算法</span><br><span class="line">├── drivers 驱动代码</span><br><span class="line">├── fs 虚拟文件系统（VFS）的代码</span><br><span class="line">├── include 头文件</span><br><span class="line">├── init 内核初始化代码</span><br><span class="line">├── ipc 进程间通信代码</span><br><span class="line">├── kernel 存放支持体系结构特有的诸如信号量处理和SMP之类特征的实现</span><br><span class="line">├── lib 存放体系结构特有的对诸如<span class="built_in">strlen</span>和<span class="built_in">memcpy</span>之类的通用函数的实现</span><br><span class="line">├── mm 存放体系结构特有的内存管理程序的实现</span><br><span class="line">├── net 核心的网络部分代码，实现了各种常见的网络协议，入TCP/IP、IPX等</span><br><span class="line">├── scripts 用以系统配置的命令文件</span><br><span class="line">├── security</span><br><span class="line">├── sound 声卡驱动以及其他声音相关的源码</span><br><span class="line">└── usr 实现用于打包和压缩的cpio等。这个文件夹中的代码在内核编译完成后创建这些文件</span><br></pre></td></tr></table></figure>
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-23T17:23:00+08:00"
-              content="2021-08-23">
-          08-23
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/23/linux-desc/" itemprop="url">
-            <span itemprop="name">linux-desc</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-11T12:53:04+08:00"
-              content="2021-08-11">
-          08-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/11/basic-linux-command-disk/" itemprop="url">
-            <span itemprop="name">Linux命令必知必会 - 磁盘管理</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-11T12:51:22+08:00"
-              content="2021-08-11">
-          08-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/11/basic-linux-command-network/" itemprop="url">
-            <span itemprop="name">Linux命令必知必会 - 网络通讯</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-11T12:48:03+08:00"
-              content="2021-08-11">
-          08-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/11/basic-linux-command-settings/" itemprop="url">
-            <span itemprop="name">Linux命令必知必会 - 系统设置</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-11T12:43:30+08:00"
-              content="2021-08-11">
-          08-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/11/basic-linux-command-system/" itemprop="url">
-            <span itemprop="name">Linux命令必知必会 - 系统管理</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-11T12:33:52+08:00"
-              content="2021-08-11">
-          08-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/11/basic-linux-command-tar/" itemprop="url">
-            <span itemprop="name">Linux命令必知必会 - 备份压缩</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-11T12:30:14+08:00"
-              content="2021-08-11">
-          08-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/11/basic-linux-command-file-transport/" itemprop="url">
-            <span itemprop="name">Linux命令必知必会 - 文件传输</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-11T12:20:31+08:00"
-              content="2021-08-11">
-          08-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/11/basic-linux-command-file/" itemprop="url">
-            <span itemprop="name">Linux命令必知必会 - 文件管理</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2021-08-11T11:09:36+08:00"
-              content="2021-08-11">
-          08-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2021/08/11/basic-linux-command/" itemprop="url">
-            <span itemprop="name">Linux命令必知必会 - 基础篇</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Linux%E5%86%85%E6%A0%B8">Linux内核</a></li>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%9E%97%E7%BA%B3%E6%96%AF%C2%B7%E6%89%98%E7%93%A6%E5%85%B9">林纳斯·托瓦兹</a></li>
+</ol>
 
     </div>
-  </div>
-  
-  
-  
 
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/Linux-Kernel/" rel="tag"># Linux Kernel</a>
+              <a href="/tags/%E6%BA%90%E7%A0%81/" rel="tag"># 源码</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/11/basic-linux-command-disk/" rel="prev" title="Linux命令必知必会 - 磁盘管理">
+      <i class="fa fa-chevron-left"></i> Linux命令必知必会 - 磁盘管理
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
@@ -405,6 +301,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9B%AE%E5%BD%95"><span class="nav-number">1.</span> <span class="nav-text">内核代码目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">2.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
