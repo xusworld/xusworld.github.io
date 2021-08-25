@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"xusworld.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="进程的创建传统Unix操作系统以统一的方式对待所有的进程：子进程复制父进程所拥有的资源。但这种方法使进程的创建非常慢且效率低，因为子进程需要拷贝父进程的整个地址空间。然而，实际上子进程几乎不必读或修改父进程拥有的全部资源，在许多情况下，子进程立即调用execve(), 并清除从父进程仔细拷贝过来的地址空间。 现在Unix内核通过引入三种不同的机制解决了这个问题  写时复制技术允许父子进程读相同的物">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程创建之 fork, vfork 和 clone">
+<meta property="og:url" content="https://xusworld.github.io/2021/08/25/linux-do-fork/index.html">
+<meta property="og:site_name" content="云中歌">
+<meta property="og:description" content="进程的创建传统Unix操作系统以统一的方式对待所有的进程：子进程复制父进程所拥有的资源。但这种方法使进程的创建非常慢且效率低，因为子进程需要拷贝父进程的整个地址空间。然而，实际上子进程几乎不必读或修改父进程拥有的全部资源，在许多情况下，子进程立即调用execve(), 并清除从父进程仔细拷贝过来的地址空间。 现在Unix内核通过引入三种不同的机制解决了这个问题  写时复制技术允许父子进程读相同的物">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-08-25T03:02:26.000Z">
+<meta property="article:modified_time" content="2021-08-25T03:03:50.564Z">
+<meta property="article:author" content="xusworld">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Linux Kernel">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://xusworld.github.io/2021/08/25/linux-do-fork/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>进程创建之 fork, vfork 和 clone | 云中歌</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">云中歌</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">所思，所想，所感</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/xusworld" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://xusworld.github.io/2021/08/25/linux-do-fork/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="xusworld">
+      <meta itemprop="description" content="人生少有平步青云，多是拼搏后螺旋上升。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="云中歌">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          进程创建之 fork, vfork 和 clone
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-25 11:02:26 / 修改时间：11:03:50" itemprop="dateCreated datePublished" datetime="2021-08-25T11:02:26+08:00">2021-08-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-Kernel/" itemprop="url" rel="index"><span itemprop="name">Linux Kernel</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="进程的创建"><a href="#进程的创建" class="headerlink" title="进程的创建"></a>进程的创建</h2><p>传统Unix操作系统以统一的方式对待所有的进程：子进程复制父进程所拥有的资源。但这种方法使进程的创建非常慢且效率低，因为子进程需要拷贝父进程的整个地址空间。然而，实际上子进程几乎不必读或修改父进程拥有的全部资源，在许多情况下，子进程立即调用execve(), 并清除从父进程仔细拷贝过来的地址空间。</p>
+<p>现在Unix内核通过引入三种不同的机制解决了这个问题</p>
+<ul>
+<li><strong>写时复制技术</strong>允许父子进程读相同的物理页。只要两者中有一个试图写一个物理页，内核就把这个物理页的内容拷贝到一个新的物理页，并把这个新的物理页分配给正在写的进程。</li>
+<li>轻量级进程允许父子进程共享每在内核的很多数据结构，如页表（也就是整个用户态地址空间）、打开文件表及信号处理。</li>
+<li>vfork() 系统调用创建的进程能共享其父进程的内存地址空间。为了防止父进程重写子进程需要的数据，阻塞父进程的执行，一直到子进程退出或执行一个新的程序为止。</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="1-fork-、vfork-和-clone"><a href="#1-fork-、vfork-和-clone" class="headerlink" title="1 fork()、vfork() 和 clone()"></a>1 fork()、vfork() 和 clone()</h2><p>在Linux中，轻量级进程是由名为 clone() 的函数创建的，该函数的参数列表如下：</p>
+<ol>
+<li><strong>fn</strong> <em>指定一个由新进程执行的函数。当函数返回值，子进程终止。函数返回一个整数，表示子进程的退出代码。</em></li>
+<li><strong>arg</strong> <em>指传递给fn()函数的数据</em></li>
+<li><strong>flags</strong> <em>各种各样的信息。低字节指定子进程结束时发送到父进程的信号代码，通常选择SIGHLD信号。剩余的三个字节给一clone标志组用于编码</em></li>
+<li><strong>child_stack</strong> <em>表示把用户态堆栈指针赋给子进程的esp寄存器。调用进程（指调向clone()的父进程）应该总是为子进程分配新的堆栈。</em></li>
+<li><strong>tls</strong> <em>表示线程局部存储段(TLS)数据结构的地址，该结构是为新轻量级进程定义的。</em></li>
+<li><strong>ptid</strong> <em>表示父进程的用户态变量地址，该父进程具有与新轻量级进程相同的PID</em></li>
+<li><strong>ctid</strong> <em>表示新轻量级进程的用户态变量地址，该进程具有这一类进程的PID</em></li>
+</ol>
+<p>传统的fork() 系统调用在Linux中使用 clone() 实现的，其中clone()的flags参数指定为SIGHLD信号及所有清0的clone标志，而它的child_stack参数是父进程当前的堆栈指针。因此，父进程和子进程暂时共享同一个用户态堆栈。但是，要感谢写时复制机制，通常只要父子进程中有一个试图改变栈，则立即各自得到用户态堆栈的一份拷贝。</p>
+<p>vfork() 系统调用在Linux中也是用 clone 实现的，其中clone()的参数flags指定为SIGHLD信号和CLONE_VM 及 CLONE_VFORK标志，clone()的参数child_stack等于父进程当前的栈指针。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">=============== linux/arch/x86/kernel/process.c ===============</span><br><span class="line"><span class="keyword">int</span> sys_fork(struct pt_regs *regs)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">return</span> do_fork(SIGCHLD, regs-&gt;sp, regs, <span class="number">0</span>, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">sys_vfork</span><span class="params">(struct pt_regs *regs)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> do_fork(CLONE_VFORK | CLONE_VM | SIGCHLD, regs-&gt;sp, regs, <span class="number">0</span>,</span><br><span class="line">		       <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">sys_clone</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">long</span> clone_flags, <span class="keyword">unsigned</span> <span class="keyword">long</span> newsp,</span></span></span><br><span class="line"><span class="params"><span class="function">	  <span class="keyword">void</span> __user *parent_tid, <span class="keyword">void</span> __user *child_tid, struct pt_regs *regs)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (!newsp)</span><br><span class="line">		newsp = regs-&gt;sp;</span><br><span class="line">	<span class="keyword">return</span> do_fork(clone_flags, newsp, regs, <span class="number">0</span>, parent_tid, child_tid);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+<h2 id="2-do-fork"><a href="#2-do-fork" class="headerlink" title="2 do_fork()"></a>2 do_fork()</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">=============== kernel/fork.c ===============</span><br><span class="line"><span class="keyword">long</span> do_fork(<span class="keyword">unsigned</span> <span class="keyword">long</span> clone_flags,</span><br><span class="line">	      <span class="keyword">unsigned</span> <span class="keyword">long</span> stack_start,</span><br><span class="line">	      struct pt_regs *regs,</span><br><span class="line">	      <span class="keyword">unsigned</span> <span class="keyword">long</span> stack_size,</span><br><span class="line">	      <span class="keyword">int</span> __user *parent_tidptr,</span><br><span class="line">	      <span class="keyword">int</span> __user *child_tidptr)</span><br><span class="line">&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2-1-参数"><a href="#2-1-参数" class="headerlink" title="2.1 参数"></a>2.1 参数</h3><p><code>do_fork()</code>函数具有六个参数，通过设置不同的参数，来实现clone(), fork()和vfork()系统调用。</p>
+<p>(1) clone_flags</p>
+<p><code>clone_flags</code> 定义在 <code>include/linux/sched.h</code>文件中，由一组宏定义组成，代码如下。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">=============== include/linux/sched.h ===============</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * cloning flags:</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CSIGNAL		0x000000ff	<span class="comment">/* signal mask to be sent at exit */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_VM	0x00000100	<span class="comment">/* set if VM shared between processes */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_FS	0x00000200	<span class="comment">/* set if fs info shared between processes */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_FILES	0x00000400	<span class="comment">/* set if open files shared between processes */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_SIGHAND	0x00000800	<span class="comment">/* set if signal handlers and blocked signals shared */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_PTRACE	0x00002000	<span class="comment">/* set if we want to let tracing continue on the child too */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_VFORK	0x00004000	<span class="comment">/* set if the parent wants the child to wake it up on mm_release */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_PARENT	0x00008000	<span class="comment">/* set if we want to have the same parent as the cloner */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_THREAD	0x00010000	<span class="comment">/* Same thread group? */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_NEWNS	0x00020000	<span class="comment">/* New namespace group? */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_SYSVSEM	0x00040000	<span class="comment">/* share system V SEM_UNDO semantics */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_SETTLS	0x00080000	<span class="comment">/* create a new TLS for the child */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_PARENT_SETTID	0x00100000	<span class="comment">/* set the TID in the parent */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_CHILD_CLEARTID	0x00200000	<span class="comment">/* clear the TID in the child */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_DETACHED		0x00400000	<span class="comment">/* Unused, ignored */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_UNTRACED		0x00800000	<span class="comment">/* set if the tracing process can&#x27;t force CLONE_PTRACE on this clone */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_CHILD_SETTID	0x01000000	<span class="comment">/* set the TID in the child */</span></span></span><br><span class="line"><span class="comment">/* 0x02000000 was previously the unused CLONE_STOPPED (Start in stopped state)</span></span><br><span class="line"><span class="comment">   and is now available for re-use. */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_NEWUTS		0x04000000	<span class="comment">/* New utsname group? */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_NEWIPC		0x08000000	<span class="comment">/* New ipcs */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_NEWUSER		0x10000000	<span class="comment">/* New user namespace */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_NEWPID		0x20000000	<span class="comment">/* New pid namespace */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_NEWNET		0x40000000	<span class="comment">/* New network namespace */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> CLONE_IO		0x80000000	<span class="comment">/* Clone io context */</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>标志名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CLONE_VM</td>
+<td>共享内存描述符和所有的页表</td>
+</tr>
+<tr>
+<td>CLONE_FS</td>
+<td>共享根目录和当前工作目录所在的表，以及用于屏蔽新文件初始许可权的位掩码值</td>
+</tr>
+<tr>
+<td>CLONE_FILES</td>
+<td>共享打开文件表</td>
+</tr>
+<tr>
+<td>CLONE_SIGHAND</td>
+<td>共享信号处理程序的表、阻塞信号表和挂起信号表。如果这个标志为true, 就必须设置CLONE_VM</td>
+</tr>
+<tr>
+<td>CLONE_PTRACE</td>
+<td>如果父进程被跟踪。那么，子进程也被跟踪。尤其是，debugger程序可能希望以自己作为父进程来跟踪子进程，在这种情况下，内核把该标志强直为1</td>
+</tr>
+<tr>
+<td>CLONE_VFORK</td>
+<td>在发出 vfork() 系统调用时设置</td>
+</tr>
+<tr>
+<td>CLONE_PARENT</td>
+<td>设置子进程的父进程（进程描述符中的parent和real_parent字段）为调用进程的父进程</td>
+</tr>
+<tr>
+<td>CLONE_THREAD</td>
+<td>把子进程插入到父进程的统一线程组中，并迫使子进程共享父进程的信号描述符。因此也设置子进程的 tgid 字段 和 group_leader 字段。如果这个标志位为 true, 就必须设置 CLONE_SIGHAND 标志</td>
+</tr>
+<tr>
+<td>CLONE_NEWNS</td>
+<td>当 clone 需要自己的命名空间时（即它自己的已挂载文件系统视图）设置这个标志， 不能同时设置 CLONE_NEWNS 和 CLONE_FS</td>
+</tr>
+<tr>
+<td>CLONE_SYSVSEM</td>
+<td>共享 System V IPC 取消信号量的操作</td>
+</tr>
+<tr>
+<td>CLONE_SETTLS</td>
+<td>为轻量级进程创建新的线程局部存储段（TLS），该段由参数 tls 所指向的结构进行描述</td>
+</tr>
+<tr>
+<td>CLONE_PARENT_SEETID</td>
+<td>把子进程的PID写入由ptid参数所指向的父进程的用户态变量</td>
+</tr>
+<tr>
+<td>CLONE_CHILD_CLEARTID</td>
+<td>如果该标志被设置，则内核建立一种触发机制，用在子进程要退出或要开始执行新程序时。在这些情况下，内核将清除由参数 ctid 所指向的用户态变量，并唤醒等待这个事件的任何进程</td>
+</tr>
+<tr>
+<td>CLONE_DETACHED</td>
+<td>遗留标志，内核会忽略它</td>
+</tr>
+<tr>
+<td>CLONE_UNTRACED</td>
+<td>内核设置这个标志以使 CLONE_PTRACE 标志失去作用</td>
+</tr>
+<tr>
+<td>CLONE_CHILD_SETTID</td>
+<td>把子进程的PID写入由ctid参数所指向的子进程的用户态变量中</td>
+</tr>
+<tr>
+<td>CLONE_STOPPED</td>
+<td>强迫子进程开始于 TASK_STOPPED状态</td>
+</tr>
+</tbody></table>
+<p>(2) stack_start</p>
+<p>表示把用户态堆栈指针赋给子进程的ESP寄存器。调用进程应该总是为子进程分配新的堆栈。</p>
+<p>(3) regs</p>
+<p>指向通用寄存器值的指针，通用寄存器的值是在用户态切换到内核态时被保存到内核态堆栈中的。</p>
+<p>(4) stack_size</p>
+<p>未使用（总是被设置为0）</p>
+<p>(5) parent_tidptr</p>
+<p>表示父进程的用户态变量地址，该父进程具有与新轻量级进程相同的PID。只有在CLONE_PARENT_SETTID标志被设置时才有意义。</p>
+<p>(6) child_tidptr</p>
+<p>表示轻量级进程的用户态变量地址，该进程具有这一类进程的PID。只有在CLONE_CHILD_SETTID标志被设置时才有意义。</p>
+<h3 id="2-2-源码分析"><a href="#2-2-源码分析" class="headerlink" title="2.2 源码分析"></a>2.2 源码分析</h3><ol>
+<li>函数签名</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">=============== kernel/fork.c ===============</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> *  Ok, this is the main fork-routine.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * It copies the process, and if successful kick-starts</span></span><br><span class="line"><span class="comment"> * it and waits for it to finish using the VM if required.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">long</span> do_fork(<span class="keyword">unsigned</span> <span class="keyword">long</span> clone_flags,</span><br><span class="line">	      <span class="keyword">unsigned</span> <span class="keyword">long</span> stack_start,</span><br><span class="line">	      struct pt_regs *regs,</span><br><span class="line">	      <span class="keyword">unsigned</span> <span class="keyword">long</span> stack_size,</span><br><span class="line">	      <span class="keyword">int</span> __user *parent_tidptr,</span><br><span class="line">	      <span class="keyword">int</span> __user *child_tidptr)</span><br><span class="line">&#123;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>通过查找pixmap_array位图，为子进程分配新的PID。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">p</span>;</span></span><br><span class="line"><span class="keyword">int</span> trace = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">long</span> pid = alloc_pidmap();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (pid &lt; <span class="number">0</span>)</span><br><span class="line">	<span class="keyword">return</span> -EAGAIN;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>检查父进程的ptrace字段（current-&gt;ptrace）；如果它的值不等于0，说明另外一个进程正在跟踪父进程，因而，do_fork()检查debugger程序是否自己想跟踪子进程（独立于由父进程指定的CLONE_PTRACE标志的值）。在这种情况下，如果子进程不是内核线程（CLONE_UNTRACED标志被清0），那么do_fork()函数设置CLONE_PTRACE标志。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (unlikely(current-&gt;ptrace)) &#123;</span><br><span class="line">		trace = fork_traceflag (clone_flags);</span><br><span class="line">		<span class="keyword">if</span> (trace)</span><br><span class="line">			clone_flags |= CLONE_PTRACE;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>调用copy_process()复制进程描述符。如果所有必须的资源都是可用的，该函数返回刚创建的task_struct描述符的地址。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p = copy_process(clone_flags, stack_start, regs, stack_size, parent_tidptr, child_tidptr, pid);</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>检查进程指针是否合法，如果指针不合法，释放进程pid，结束执行。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!IS_ERR(p)) &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		free_pidmap(pid);</span><br><span class="line">		pid = PTR_ERR(p);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>如果设置了CLONE_VFORK标志，则设置p-&gt;vfork_done完成量。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">completion</span> <span class="title">vfork</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (clone_flags &amp; CLONE_VFORK) &#123;</span><br><span class="line">	p-&gt;vfork_done = &amp;vfork;</span><br><span class="line">	init_completion(&amp;vfork);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>如果设置了CLONE_STOPPED标志，或者必须跟踪子进程，即在p-&gt;trace中设置了PT_PTRACED标志，那么子进程的状态被设置为TASK_STOPPED，并为子进程增加挂起的SIGSTOP信号。在另一个进程把子进程的状态恢复为TASK_RUNNING之前，子进程将一直保持为TASK_STOPPED状态。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ((p-&gt;ptrace &amp; PT_PTRACED) || (clone_flags &amp; CLONE_STOPPED)) &#123;</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	* We&#x27;ll start up with an immediate SIGSTOP.</span></span><br><span class="line"><span class="comment">	*/</span></span><br><span class="line">	sigaddset(&amp;p-&gt;pending.signal, SIGSTOP);</span><br><span class="line">	set_tsk_thread_flag(p, TIF_SIGPENDING);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="8">
+<li><p>如果没有设置CLONE_STOPPED标志，则调用wake_up_new_task()函数以执行下述操作：</p>
+<ol>
+<li>调整父进程和子进程的调度参数</li>
+<li>如果子进程和父进程运行在同一个CPU上（当内核创建一个新进程时，父进程有可能会被转移到另一个CPU上执行），而且父进程和子进程不能共享共一组页表（CLONE_VM标志被清0），那么，就把子进程插入到父进程运行队列，插入时让子进程恰好在父进程前面，因而迫使子进程先于父进程运行。如果子进程刷新其他地址空间，并在创建之后执行新程序，那么这种简单的处理会产生较好的性能。而如果我们让父进程先运行，那么写时复制机制将会执行一系列不必要的页面复制。</li>
+<li>否则，如果子进程与父进程运行在不同的CPU上，或者父进程和子进程共享同一组页表（CLONE_VM标志被设置），那么就把子进程插入父进程运行队列的队尾。</li>
+</ol>
+</li>
+<li><p>如果CLONE_STOPPED标志被设置，则把子进程置为TASK_STOPPED状态。</p>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!(clone_flags &amp; CLONE_STOPPED))</span><br><span class="line">			wake_up_new_task(p, clone_flags);</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">			p-&gt;state = TASK_STOPPED;</span><br></pre></td></tr></table></figure>
+
+<ol start="10">
+<li>如果父进程被跟踪，则把子进程的PID存入current的ptrace_message字段并调用ptrace_notify()。ptrace_notify()使当前进程停止运行，并向当前进程的父进程发送SIGCHLD信号。子进程的祖父进程是跟踪父进程的debugger进程。SIGCHLD信号同志debugger进程：current已经创建了一个子进程，可以查找current-&gt;trace_message字段获取子进程的PID。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (unlikely (trace)) &#123;</span><br><span class="line">			current-&gt;ptrace_message = pid;</span><br><span class="line">			ptrace_notify ((trace &lt;&lt; <span class="number">8</span>) | SIGTRAP);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="11">
+<li>如果设置了CLONE_VFORK标志，则把父进程插入等待队列，并挂起父进程直到子进程释放自己的内存地址空间（即直到子进程结束或执行新的程序）。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (clone_flags &amp; CLONE_VFORK) &#123;</span><br><span class="line">			wait_for_completion(&amp;vfork);</span><br><span class="line">			<span class="keyword">if</span> (unlikely (current-&gt;ptrace &amp; PT_TRACE_VFORK_DONE))</span><br><span class="line">				ptrace_notify ((PTRACE_EVENT_VFORK_DONE &lt;&lt; <span class="number">8</span>) | SIGTRAP);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="12">
+<li>结束并返回子进程的PID。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> pid;</span><br></pre></td></tr></table></figure>
+
+
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/Linux-Kernel/" rel="tag"># Linux Kernel</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/08/23/linux-resource-limit/" rel="prev" title="进程资源限制">
+      <i class="fa fa-chevron-left"></i> 进程资源限制
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-text">进程的创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-fork-%E3%80%81vfork-%E5%92%8C-clone"><span class="nav-text">1 fork()、vfork() 和 clone()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-do-fork"><span class="nav-text">2 do_fork()</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%8F%82%E6%95%B0"><span class="nav-text">2.1 参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="nav-text">2.2 源码分析</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">xusworld</p>
+  <div class="site-description" itemprop="description">人生少有平步青云，多是拼搏后螺旋上升。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xusworld</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
